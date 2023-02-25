@@ -24,14 +24,7 @@ namespace DisplayHandling {
         }
 
         void createHeadline() {
-            gfx->fillRect(0,0,480,20, RED); //change
-
-            //THis branch should be used
-            //master change!!
-
-
-            //DE MIVAN HA BELESZÓLOK??
-
+            gfx->fillRect(0,0,480,20, RED);
         }
     };
 }
