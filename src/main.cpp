@@ -36,4 +36,5 @@ void loop() {
   jpegHandler.drawJpeg("/downloads/testt.jpg", 0,0);
   delay(2000); // is it working on mac?
   //masterchange
+  //second
 }
