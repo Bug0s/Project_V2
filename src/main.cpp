@@ -35,6 +35,7 @@ void loop() {
   displayHandler.gfx->fillScreen(random(0xFFFF));
   jpegHandler.drawJpeg("/downloads/testt.jpg", 0,0);
   delay(2000); // is it working on mac?
+  //Arraydec
   //masterchange
   //second
 }
