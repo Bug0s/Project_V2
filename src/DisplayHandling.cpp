@@ -25,6 +25,7 @@ namespace DisplayHandling {
 
         void createHeadline() {
             gfx->fillRect(0,0,480,20, RED); //change
+            //master change!!
         }
     };
 }
