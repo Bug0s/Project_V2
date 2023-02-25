@@ -34,5 +34,5 @@ void loop() {
   // put your main code here, to run repeatedly:
   displayHandler.gfx->fillScreen(random(0xFFFF));
   jpegHandler.drawJpeg("/downloads/testt.jpg", 0,0);
-  delay(2000);
+  delay(2000); //hihi
 }
