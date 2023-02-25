@@ -4,17 +4,19 @@
 #include "FS.h"
 #include "SPIFFS.h"
 #include "HTTPClient.h"
-/*class ImageData {
+#include "Networking.h"
+
+namespace Networking
+{
+    class ImageData {
+        public:
             uint8_t imageData;
             size_t imageSize;
-            public:
             ImageData(uint8_t data, size_t size) {
                 this->imageData = data;
                 this->imageSize = size;
             }
-        };*/
-namespace Networking
-{
+    };
     
     class Network {
     public:
@@ -31,7 +33,7 @@ namespace Networking
             Serial.println((String)ssid);
         }
         
-        uint8_t donwloadImage(char *link)
+        ImageData donwloadImage(char *link)
         {
             //File file = SPIFFS.open("/downloads/testt.png", "w");
             HTTPClient downloadImage;
@@ -52,8 +54,7 @@ namespace Networking
                     returnImage += *imageData;
                     downloaded_data_size += available_data_size;
                     //Serial.println(file.readString());
-                    //return ImageData(returnImage, imageSize);
-                    return returnImage;
+                    return ImageData(returnImage, imageSize);
                     free(imageData);
                 }
             }

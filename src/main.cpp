@@ -1,18 +1,18 @@
 #include <Arduino.h>
 #include "SPI.h"
-#include "Networking.cpp"
+#include "Networking.h"
 #include "DisplayHandling.cpp"
 #include "DataHandling.cpp"
 #include "SPIFFS.h"
 #include "FS.h"
 #define FS_NO_GLOBALS
 
-using namespace Networking;
+//using namespace Networking;
 using namespace DisplayHandling;
 using namespace DataHandling;
 
 //Network network = Network();
-Networking::Network network = Networking::Network();
+Network network = Network();
 DisplayHandler displayHandler = DisplayHandler();
 JpegHandler jpegHandler = JpegHandler(displayHandler.gfx);
 
