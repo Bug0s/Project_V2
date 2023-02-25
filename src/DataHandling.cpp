@@ -3,7 +3,10 @@
 #include <SPIFFS.h>
 #include <FS.h>
 #include <Arduino_GFX_Library.h>
+#include "Networking.cpp"
 #define minimum(a, b) (((a) < (b)) ? (a) : (b))
+
+using namespace Networking;
 
 namespace DataHandling
 {
@@ -14,6 +17,9 @@ namespace DataHandling
     public:
         JpegHandler(Arduino_GFX* tft) {
             this->tft = tft;
+        }
+        uint8_t decodeArray(uint8_t jpgArr, size_t size) {
+            //JpegDec.decodeArray()
         }
         void drawJpeg(const char *filename, int xpos, int ypos)
         {

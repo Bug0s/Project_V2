@@ -11,7 +11,8 @@ using namespace Networking;
 using namespace DisplayHandling;
 using namespace DataHandling;
 
-Network network = Network();
+//Network network = Network();
+Networking::Network network = Networking::Network();
 DisplayHandler displayHandler = DisplayHandler();
 JpegHandler jpegHandler = JpegHandler(displayHandler.gfx);
 
