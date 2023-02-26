@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "SPI.h"
-#include "Networking.h"
+#include "Networking.cpp"
 #include "DisplayHandling.cpp"
 #include "DataHandling.cpp"
 #include "SPIFFS.h"
@@ -10,6 +10,7 @@
 //using namespace Networking;
 using namespace DisplayHandling;
 using namespace DataHandling;
+using namespace Networking;
 
 //Network network = Network();
 Network network = Network();

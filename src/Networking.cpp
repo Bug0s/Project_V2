@@ -1,10 +1,13 @@
+//#ifndef NETWORKING_CPP
+//#define NETWORKING_CPP
+#pragma once
 #include "Arduino.h"
 #include "WiFi.h"
 #include "SPI.h"
 #include "FS.h"
 #include "SPIFFS.h"
 #include "HTTPClient.h"
-#include "Networking.h"
+
 
 namespace Networking
 {
@@ -64,3 +67,5 @@ namespace Networking
     };
 
 }
+
+//#endif

@@ -1,8 +1,10 @@
+#pragma once
 #include <Arduino.h>
 #include <JPEGDecoder.h>
 #include <SPIFFS.h>
 #include <FS.h>
 #include <Arduino_GFX_Library.h>
+#include "Networking.cpp"
 
 #define minimum(a, b) (((a) < (b)) ? (a) : (b))
 namespace DataHandling
