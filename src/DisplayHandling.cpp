@@ -1,6 +1,8 @@
 #pragma once
 #include "Arduino.h"
 #include "Arduino_GFX_Library.h"
+#include "Networking.cpp"
+#include "DataHandling.cpp"
 
 
 namespace DisplayHandling {
@@ -26,6 +28,12 @@ namespace DisplayHandling {
 
         void createHeadline() {
             gfx->fillRect(0,0,480,20, RED);
+        }
+        void downloadAndDisplayImage(char* link, int pos_x, int pos_y) {
+            Networking::ImageData data = Networking::Network().donwloadImage(link);
+            if (DataHandling::JpegHandler::decodeArray((const uint8_t*)data.imageData, data.imageSize)) {
+                
+            }
         }
     };
 }

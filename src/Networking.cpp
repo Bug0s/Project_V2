@@ -13,9 +13,9 @@ namespace Networking
 {
     class ImageData {
         public:
-            uint8_t imageData;
+            const uint8_t* imageData;
             size_t imageSize;
-            ImageData(uint8_t data, size_t size) {
+            ImageData(uint8_t* data, size_t size) {
                 this->imageData = data;
                 this->imageSize = size;
             }
@@ -45,7 +45,7 @@ namespace Networking
             WiFiClient *stream = downloadImage.getStreamPtr();
             size_t downloaded_data_size = 0;
             const size_t imageSize = downloadImage.getSize();
-            uint8_t returnImage;
+            uint8_t* returnImage;
             while (downloaded_data_size < imageSize)
             {
                 size_t available_data_size = stream->available();
@@ -60,7 +60,7 @@ namespace Networking
                     return ImageData(returnImage, imageSize);
                     free(imageData);
                 }
-            }
+    
 
             //file.close();
         }

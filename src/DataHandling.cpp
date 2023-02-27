@@ -18,9 +18,9 @@ namespace DataHandling
             this->tft = tft;
             //Networking::Network test = Networking::Network();
         }
-        uint8_t decodeArray(const uint8_t* jpgArr, size_t size) {
-            JpegDec.decodeArray(jpgArr, size);
-
+        static bool decodeArray(const uint8_t* jpgArr, size_t size) {
+            bool decoded = JpegDec.decodeArray(jpgArr, size);
+            return (decoded) ? true :  false;
         }
         void drawJpeg(const char *filename, int xpos, int ypos)
         {
