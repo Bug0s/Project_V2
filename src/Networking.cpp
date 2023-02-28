@@ -23,6 +23,7 @@ namespace Networking
             this->imageDataPtr = &imageData;
             Serial.println("Class contruct:!");
             Serial.println(sizeof(*imageDataPtr));
+            //Mac :P
         }
     };
 
