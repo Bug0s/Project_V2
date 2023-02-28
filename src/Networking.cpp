@@ -45,7 +45,7 @@ namespace Networking
 
         ImageData donwloadImage(char *link)
         {
-            // File file = SPIFFS.open("/downloads/testt.png", "w");
+            File file = SPIFFS.open("/downloads/breakpoint.png", "w");
             HTTPClient downloadImage;
             downloadImage.begin(link);
             int httpCode = downloadImage.GET();
@@ -60,7 +60,7 @@ namespace Networking
                 {
                     uint8_t *imageData = (uint8_t *)malloc(available_data_size);
                     stream->readBytes(imageData, available_data_size);
-                    // file.write(imageData, available_data_size);
+                    file.write(imageData, available_data_size);
                     returnImage += *imageData;
                     downloaded_data_size += available_data_size;
                     // Serial.println(file.readString());
