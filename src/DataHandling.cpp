@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DATAHANDLING_CPP
+#define DATAHANDLING_CPP
 #include <Arduino.h>
 #include <JPEGDecoder.h>
 #include <SPIFFS.h>
@@ -19,6 +20,8 @@ namespace DataHandling
             //Networking::Network test = Networking::Network();
         }
         static bool decodeArray(const uint8_t* jpgArr, size_t size) {
+            Serial.println("starting to decode");
+            Serial.println(sizeof(*jpgArr));
             bool decoded = JpegDec.decodeArray(jpgArr, size);
             return (decoded) ? true :  false;
         }
@@ -56,14 +59,14 @@ namespace DataHandling
                 // jpegInfo();
 
                 // render the image onto the screen at given coordinates
-                jpegRender(xpos, ypos);
+                JpegHandler::jpegRender(xpos, ypos, tft);
             }
             else
             {
                 Serial.println("Jpeg file format not supported!");
             }
         }
-        void jpegRender(int xpos, int ypos)
+        static void jpegRender(int xpos, int ypos, Arduino_GFX* tft)
         {
 
             // retrieve infomration about the image
@@ -145,3 +148,4 @@ namespace DataHandling
         }
     };
 }
+#endif

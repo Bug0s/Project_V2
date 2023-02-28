@@ -26,7 +26,7 @@ void setup() {
     Serial.println("SPIFFS initialisation failed!");
     while (1) yield(); // Stay here twiddling thumbs waiting
   }
-  network.donwloadImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg");
+  //network.donwloadImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg");
 
   
   
@@ -35,6 +35,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   displayHandler.gfx->fillScreen(random(0xFFFF));
-  jpegHandler.drawJpeg("/downloads/testt.jpg", 0,0);
+  //jpegHandler.drawJpeg("/downloads/testt.jpg", 0,0);
+  displayHandler.downloadAndDisplayImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg", 20,20);
   delay(2000);
 }

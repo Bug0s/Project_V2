@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DISPLAYHANDLING_CPP
+#define DISPLAYHANDLING_CPP
 #include "Arduino.h"
 #include "Arduino_GFX_Library.h"
 #include "Networking.cpp"
@@ -31,9 +32,14 @@ namespace DisplayHandling {
         }
         void downloadAndDisplayImage(char* link, int pos_x, int pos_y) {
             Networking::ImageData data = Networking::Network().donwloadImage(link);
-            if (DataHandling::JpegHandler::decodeArray((const uint8_t*)data.imageData, data.imageSize)) {
-                
+            Serial.println("breakpoint1");
+            if (DataHandling::JpegHandler::decodeArray(data.imageDataPtr, data.imageSize)) {
+                Serial.println("breakpoint12");
+                DataHandling::JpegHandler::jpegRender(20,20,gfx);
+            } else {
+                Serial.println("Decoding ERROR!");
             }
         }
     };
 }
+#endif
