@@ -30,7 +30,7 @@ namespace DisplayHandling {
         void createHeadline() {
             gfx->fillRect(0,0,480,20, RED);
         }
-        void downloadAndDisplayImage(char* link, int pos_x, int pos_y) {
+        /*void downloadAndDisplayImage(char* link, int pos_x, int pos_y) {
             Networking::ImageData data = Networking::Network().donwloadImage(link);
             Serial.println("breakpoint1");
             if (DataHandling::JpegHandler::decodeArray(data.imageDataPtr, data.imageSize)) {
@@ -39,7 +39,7 @@ namespace DisplayHandling {
             } else {
                 Serial.println("Decoding ERROR!");
             }
-        }
+        }*/
     };
 }
 #endif

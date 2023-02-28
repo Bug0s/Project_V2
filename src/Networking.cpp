@@ -15,7 +15,7 @@ namespace Networking
     public:
         uint8_t imageData;
         size_t imageSize;
-        const uint8_t* imageDataPtr;
+        const uint8_t *imageDataPtr;
         ImageData(uint8_t data, size_t size)
         {
             this->imageData = data;
@@ -23,7 +23,7 @@ namespace Networking
             this->imageDataPtr = &imageData;
             Serial.println("Class contruct:!");
             Serial.println(sizeof(*imageDataPtr));
-            //Mac :P
+            // Mac :P
         }
     };
 
@@ -43,33 +43,48 @@ namespace Networking
             Serial.println((String)ssid);
         }
 
-        ImageData donwloadImage(char *link)
+        void donwloadImage(char *link)
         {
-            File file = SPIFFS.open("/downloads/breakpoint.png", "w");
-            HTTPClient downloadImage;
-            downloadImage.begin(link);
-            int httpCode = downloadImage.GET();
-            WiFiClient *stream = downloadImage.getStreamPtr();
-            size_t downloaded_data_size = 0;
-            const size_t imageSize = downloadImage.getSize();
-            uint8_t returnImage;
-            while (downloaded_data_size < imageSize)
+            // File file = SPIFFS.open("/downloads/breakpoint.png", "w");
+            HTTPClient http;
+
+            // Send HTTP GET request
+            http.begin(link);
+            int httpCode = http.GET();
+
+            // Check HTTP status code
+            if (httpCode == HTTP_CODE_OK)
             {
-                size_t available_data_size = stream->available();
-                if (available_data_size > 0)
+                // Open file for writing
+                File file = SPIFFS.open("/image.jpg", FILE_WRITE);
+                if (!file)
                 {
-                    uint8_t *imageData = (uint8_t *)malloc(available_data_size);
-                    stream->readBytes(imageData, available_data_size);
-                    file.write(imageData, available_data_size);
-                    returnImage += *imageData;
-                    downloaded_data_size += available_data_size;
-                    // Serial.println(file.readString());
-                    return ImageData(*imageData, imageSize);
-                    free(imageData);
+                    Serial.println("Failed to open file for writing");
+                    return;
                 }
 
-                // file.close();
+                // Read response into buffer and write to file
+                WiFiClient *stream = http.getStreamPtr();
+                const size_t bufferSize = 1024;
+                uint8_t buffer[bufferSize];
+                int bytesRead;
+                while ((bytesRead = stream->readBytes(buffer, bufferSize)) > 0)
+                {
+                    file.write(buffer, bytesRead);
+                }
+
+                // Close file
+                file.close();
+                Serial.println("Image downloaded");
             }
+            else
+            {
+                Serial.printf("HTTP GET failed, error code: %d\n", httpCode);
+            }
+
+            // Disconnect HTTP client
+            http.end();
+            //return ImageData(buffer, imageSize);
         }
     };
 }
