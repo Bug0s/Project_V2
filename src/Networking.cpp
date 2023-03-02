@@ -43,7 +43,7 @@ namespace Networking
             Serial.println((String)ssid);
         }
 
-        void donwloadImage(char *link)
+        void downloadImage(char *link)
         {
             // File file = SPIFFS.open("/downloads/breakpoint.png", "w");
             HTTPClient http;
