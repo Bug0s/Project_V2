@@ -5,11 +5,13 @@
 #include "Networking.cpp"
 #include "DataHandling.cpp"
 
+using namespace DataHandling;
 
 namespace DisplayHandling {
     class DisplayHandler {
         private:
         Arduino_DataBus* bus = create_default_Arduino_DataBus();
+        JpegHandler jpegHandler = JpegHandler();
             
         public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
@@ -29,17 +31,9 @@ namespace DisplayHandling {
 
         void createHeadline() {
             gfx->fillRect(0,0,480,20, RED);
+            jpegHandler.drawJpeg("/batteryCharging.jpg", 480-15, 0, gfx);
+            
         }
-        /*void downloadAndDisplayImage(char* link, int pos_x, int pos_y) {
-            Networking::ImageData data = Networking::Network().donwloadImage(link);
-            Serial.println("breakpoint1");
-            if (DataHandling::JpegHandler::decodeArray(data.imageDataPtr, data.imageSize)) {
-                Serial.println("breakpoint12");
-                DataHandling::JpegHandler::jpegRender(20,20,gfx);
-            } else {
-                Serial.println("Decoding ERROR!");
-            }
-        }*/
     };
 }
 #endif
