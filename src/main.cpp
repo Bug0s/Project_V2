@@ -15,17 +15,18 @@ using namespace Networking;
 //Network network = Network();
 Network network = Network();
 DisplayHandler displayHandler = DisplayHandler();
-JpegHandler jpegHandler = JpegHandler(displayHandler.gfx);
+JpegHandler jpegHandler = JpegHandler();
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   network.connectToWiFi("Macko", "Maczkonokia01");
-  displayHandler.initTFT();
   if (!SPIFFS.begin()) {
     Serial.println("SPIFFS initialisation failed!");
     while (1) yield(); // Stay here twiddling thumbs waiting
   }
+  displayHandler.initTFT();
+  
   //network.donwloadImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg");
 
   
@@ -38,6 +39,6 @@ void loop() {
   //jpegHandler.drawJpeg("/downloads/testt.jpg", 0,0);
   //displayHandler.downloadAndDisplayImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg", 20,20);
   network.downloadImage("https://static.wikia.nocookie.net/gloomverse/images/3/3f/Random.jpg/revision/latest?cb=20190516041403");
-  jpegHandler.drawJpeg("/image.jpg", 20, 20);
+  jpegHandler.drawJpeg("/image.jpg", 20, 20, displayHandler.gfx);
   delay(2000);
 }

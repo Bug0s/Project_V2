@@ -10,22 +10,21 @@
 #define minimum(a, b) (((a) < (b)) ? (a) : (b))
 namespace DataHandling
 {
+    struct ImageInfo {
+        public:
+        static const unsigned short int batteryX = 110;
+        static const unsigned short int batteryY = 195;
+    };
     class JpegHandler
     {
-        private:
-        Arduino_GFX* tft;
     public:
-        JpegHandler(Arduino_GFX* tft) {
-            this->tft = tft;
-            //Networking::Network test = Networking::Network();
-        }
         static bool decodeArray(const uint8_t* jpgArr, size_t size) {
             Serial.println("starting to decode");
             Serial.println(sizeof(*jpgArr));
             bool decoded = JpegDec.decodeArray(jpgArr, size);
             return (decoded) ? true :  false;
         }
-        void drawJpeg(const char *filename, int xpos, int ypos)
+        void drawJpeg(const char *filename, int xpos, int ypos, Arduino_GFX* tft)
         {
 
             Serial.println("===========================");
