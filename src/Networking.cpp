@@ -23,7 +23,6 @@ namespace Networking
             this->imageDataPtr = &imageData;
             Serial.println("Class contruct:!");
             Serial.println(sizeof(*imageDataPtr));
-            // Mac :P
         }
     };
 
@@ -81,8 +80,6 @@ namespace Networking
             {
                 Serial.printf("HTTP GET failed, error code: %d\n", httpCode);
             }
-
-            // Disconnect HTTP client
             http.end();
             //return ImageData(buffer, imageSize);
         }
