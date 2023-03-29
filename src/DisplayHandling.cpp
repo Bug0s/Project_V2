@@ -7,41 +7,48 @@
 
 using namespace DataHandling;
 
-namespace DisplayHandling {
-    class DisplayHandler {
-        private:
-        Arduino_DataBus* bus = create_default_Arduino_DataBus();
+namespace DisplayHandling
+{
+    class DisplayHandler
+    {
+    private:
+        Arduino_DataBus *bus = create_default_Arduino_DataBus();
         JpegHandler jpegHandler = JpegHandler();
-            
-        public:
+
+    public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
-        void initTFT() {
+        void initTFT()
+        {
             gfx->begin();
             gfx->fillScreen(BLACK);
-            gfx->setTextColor(2);
+            gfx->setTextSize(2);
             gfx->setTextColor(WHITE);
             pinMode(22, OUTPUT);
-            setBackgroundLed(255);
+            setBackgroundLed(100);
             createHeadline();
         }
 
-        void setBackgroundLed(int value) {
-            analogWrite(22,value);
+        // Sets the background led strongness by percentage
+        void setBackgroundLed(int value)
+        {
+            analogWrite(22, 255 * value / 100);
         }
 
-        void createHeadline() {
-            gfx->fillRect(0,0,480,20, RED);
-            drawJpeg("/batteryCharging.jpg", 480-15, 0, gfx);
-            
+        void resetScreen()
+        {
+            gfx->fillScreen(BLACK);
         }
 
-        void downloadAndDisplayImage(char* link, int xpos, int ypos) {
+        // Downloads a JPG and displays it to the TFT
+        void downloadAndDisplayImage(char *link, int xpos, int ypos)
+        {
             Networking::Network().downloadImage(link);
             this->drawJpeg("/image.jpg", xpos, ypos, this->gfx);
         }
 
+        // Draws a JPG from SPIFFS
+        void drawJpeg(const char *filename, int xpos, int ypos, Arduino_GFX *tft)
 
-        void drawJpeg(const char *filename, int xpos, int ypos, Arduino_GFX* tft)
         {
 
             Serial.println("===========================");
@@ -81,6 +88,57 @@ namespace DisplayHandling {
             {
                 Serial.println("Jpeg file format not supported!");
             }
+        }
+
+        // SCREENS
+
+        // Draws the status bar
+        void createHeadline()
+        {
+            gfx->fillRect(0, 0, 480, 20, RED);
+            drawJpeg("/batteryCharging.jpg", 480 - 15, 0, gfx);
+        }
+
+        void drawHomeScreen()
+        {
+            createHeadline();
+
+            gfx->drawRect(35, 40, 100, 100, YELLOW);   // Messages Upper left
+            gfx->drawRect(140, 170, 100, 100, YELLOW); // Heart Lower left
+            gfx->drawRect(245, 40, 100, 100, YELLOW);  // History Upper right
+            gfx->drawRect(350, 170, 100, 100, YELLOW); // ??? Lower right
+        }
+
+        void drawDownloadScreen()
+        {
+            createHeadline();
+
+            gfx->drawRect(100, 60, 200, 280, RED);
+
+            gfx->setCursor(120, 75);
+            gfx->setTextColor(WHITE);
+            gfx->setTextSize(2);
+            gfx->println("Üzenet letöltése..."); // ??
+        }
+
+        void drawMessageScreen()
+        {
+            createHeadline();
+
+            gfx->fillRect(50, 40, 380, 100, BLUE);
+
+            // BUTTONS
+            gfx->drawRect(420, 240, 60, 80, YELLOW); // may should be ROUNDED?
+            gfx->drawFastHLine(420, 280, 60, YELLOW);
+        }
+
+        void drawHistoryScreen() {
+            createHeadline();
+        }
+
+        void drawLoveScreen() {
+            createHeadline();
+            
         }
     };
 }

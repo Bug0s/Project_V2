@@ -10,11 +10,6 @@
 #define minimum(a, b) (((a) < (b)) ? (a) : (b))
 namespace DataHandling
 {
-    struct ImageInfo {
-        public:
-        static const unsigned short int batteryX = 110;
-        static const unsigned short int batteryY = 195;
-    };
     class JpegHandler
     {
     public:
