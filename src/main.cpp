@@ -34,11 +34,8 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  //displayHandler.gfx->fillScreen(random(0xFFFF));
-  //jpegHandler.drawJpeg("/downloads/testt.jpg", 0,0);
-  //displayHandler.downloadAndDisplayImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg", 20,20);
-  network.downloadImage("https://static.wikia.nocookie.net/gloomverse/images/3/3f/Random.jpg/revision/latest?cb=20190516041403");
-  jpegHandler.drawJpeg("/image.jpg", 20, 20, displayHandler.gfx);
-  delay(2000);
+  displayHandler.downloadAndDisplayImage(
+    "https://static.wikia.nocookie.net/gloomverse/images/3/3f/Random.jpg/revision/latest?cb=20190516041403",
+    20,20);
+  delay(20000);
 }
