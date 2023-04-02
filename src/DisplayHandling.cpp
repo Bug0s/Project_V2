@@ -4,6 +4,7 @@
 #include "Arduino_GFX_Library.h"
 #include "Networking.cpp"
 #include "DataHandling.cpp"
+#include "XPT2046_Touchscreen.h"
 
 using namespace DataHandling;
 
@@ -17,6 +18,7 @@ namespace DisplayHandling
 
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
+        XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
         void initTFT()
         {
             gfx->begin();
@@ -25,7 +27,9 @@ namespace DisplayHandling
             gfx->setTextColor(WHITE);
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
-            createHeadline();
+            drawHomeScreen();
+            ts.begin();
+            
         }
 
         // Sets the background led strongness by percentage
@@ -93,12 +97,10 @@ namespace DisplayHandling
         // SCREENS
 
         // Draws the status bar
-        void createHeadline()
-        {
-            gfx->fillRect(0, 0, 480, 20, RED);
-            drawJpeg("/batteryCharging.jpg", 480 - 15, 0, gfx);
+        void createHeadline() {
+            gfx->fillRect(0,0,480,20, RED);
+            drawJpeg("/batteryCharging.jpg", 480-40, 1, gfx);
         }
-
         void drawHomeScreen()
         {
             createHeadline();
@@ -139,11 +141,7 @@ namespace DisplayHandling
         void drawLoveScreen() {
             createHeadline();
         }
-        void createHeadline() {
-            gfx->fillRect(0,0,480,20, RED);
-            jpegHandler.drawJpeg("/batteryCharging.jpg", 480-40, 1, gfx);
-            
-        }
+        
     };
 }
 #endif
