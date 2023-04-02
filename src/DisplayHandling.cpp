@@ -4,7 +4,7 @@
 #include "Arduino_GFX_Library.h"
 #include "Networking.cpp"
 #include "DataHandling.cpp"
-#include "XPT2046_Touchscreen.h"
+//#include "XPT2046_Touchscreen.h"
 
 using namespace DataHandling;
 
@@ -18,7 +18,7 @@ namespace DisplayHandling
 
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
-        XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
+        //XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
         void initTFT()
         {
             gfx->begin();
@@ -28,7 +28,7 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             drawHomeScreen();
-            ts.begin();
+            //ts.begin();
             
         }
 
