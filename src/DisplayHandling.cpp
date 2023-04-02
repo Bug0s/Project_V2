@@ -105,13 +105,15 @@ namespace DisplayHandling
         {
             createHeadline();
 
+            //Background
+            drawJpeg("/backgrounds/homeBackground.jpg", 0, 20, this->gfx);
+
             gfx->drawRect(35, 40, 100, 100, YELLOW);   // Messages Upper left
             gfx->drawRect(140, 170, 100, 100, YELLOW); // Heart Lower left
             gfx->drawRect(245, 40, 100, 100, YELLOW);  // History Upper right
             gfx->drawRect(350, 170, 100, 100, YELLOW); // ??? Lower right
 
-            //Background
-            drawJpeg("/background/homeBackground.jpg", 0, 20, this->gfx);
+            
         }
 
         void drawDownloadScreen()
