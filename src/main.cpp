@@ -34,8 +34,6 @@ void setup() {
 }
 
 void loop() {
-  displayHandler.downloadAndDisplayImage(
-    "https://static.wikia.nocookie.net/gloomverse/images/3/3f/Random.jpg/revision/latest?cb=20190516041403",
-    20,20);
-  delay(20000);
+  
+  displayHandler.ts.
 }
