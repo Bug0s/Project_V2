@@ -31,7 +31,7 @@ namespace DisplayHandling {
 
         void createHeadline() {
             gfx->fillRect(0,0,480,20, RED);
-            jpegHandler.drawJpeg("/batteryCharging.jpg", 480-15, 0, gfx);
+            jpegHandler.drawJpeg("/batteryCharging.jpg", 480-40, 1, gfx);
             
         }
     };
