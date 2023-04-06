@@ -4,21 +4,38 @@
 #include "Arduino_GFX_Library.h"
 #include "Networking.cpp"
 #include "DataHandling.cpp"
-//#include "XPT2046_Touchscreen.h"
+#include "XPT2046_Touchscreen.h"
 
 using namespace DataHandling;
 
 namespace DisplayHandling
 {
+    struct TouchPoint {
+        int x;
+        int y;
+        bool isValid;
+        TouchPoint(int x, int y) {
+            this->x = x;
+            this->y = y;
+            this->isValid = true;
+        }
+        TouchPoint(bool isValid) {
+            this->x = 0;
+            this->y = 0;
+            this->isValid = isValid;
+        }
+    };
     class DisplayHandler
     {
     private:
         Arduino_DataBus *bus = create_default_Arduino_DataBus();
         JpegHandler jpegHandler = JpegHandler();
 
+        
+
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
-        //XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
+        XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
         void initTFT()
         {
             gfx->begin();
@@ -28,7 +45,8 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             drawHomeScreen();
-            //ts.begin();
+            ts.begin();
+            
             
         }
 
@@ -145,6 +163,50 @@ namespace DisplayHandling
 
         void drawLoveScreen() {
             createHeadline();
+        }
+
+        void makeTransition(void (*to)()) {
+            //Transition backlight to 0
+            for (int i = 100; i<=0;) {
+                setBackgroundLed(--i);
+                delay(1);
+            }
+            //reset screen
+            resetScreen();
+            //draw the new screen
+            to();
+            //transition backlight to 100
+            for (int i = 0; i>=100;) {
+                setBackgroundLed(++i);
+                delay(1);
+            }
+        }
+
+        TouchPoint senseTouch() {
+            TS_Point point = ts.getPoint();
+            int maxY = 3650;
+            int maxX = 3600;
+
+            double divisionY = 11.4;
+            double divisionX = 7.5;
+
+            if (point.z != 0) {
+                TouchPoint corrigation = TouchPoint(point.x - 240, point.y - 260);
+                int resultX = corrigation.x / divisionX;
+                int resultY = corrigation.y / divisionY;
+                if (resultX < 0 || resultY < 0) {
+                    return TouchPoint(false);
+                }
+                return TouchPoint(corrigation.x / divisionX, corrigation.y / divisionY);
+
+                
+            }
+            return TouchPoint(false);
+        }
+        bool senseObject(int x1, int x2, int y1, int y2) {
+            TouchPoint tp = senseTouch();
+            //Sense wether the tocuh happened within the coordinates
+            return false;
         }
         
     };

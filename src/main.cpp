@@ -34,6 +34,13 @@ void setup() {
 }
 
 void loop() {
-  
+    TouchPoint tp = displayHandler.senseTouch();
+    if (tp.isValid) {
+      Serial.print("X: ");
+      Serial.print (tp.x);
+      Serial.print(" Y: ");
+      Serial.print(tp.y);
+      Serial.println(" ");
+    }
 
 }
