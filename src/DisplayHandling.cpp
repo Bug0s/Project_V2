@@ -159,8 +159,19 @@ namespace DisplayHandling
         // Draws the status bar
         void createHeadline()
         {
-            gfx->fillRect(0, 0, 480, 20, RED);
-            drawJpeg("/batteryCharging.jpg", 480 - 40, 1, gfx);
+            gfx->fillRect(0, 0, 480, 20, WHITE);
+            drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1, gfx); // w: 33
+            drawJpeg("/icons/WiFiOn.jpg", 440-33-15, 1, gfx); // w: 24 
+            drawJpeg("/icons/syncArrow.jpg", 440-33-15-24-15, 5, gfx); // h: 9, w:11
+
+        }
+
+        void homeScreenTouch(Box b1, Box b2, Box b3, Box b4)
+        {
+            Box upperLeft = b1;
+            Box lowerLeft = b2;
+            Box upperRight = b3;
+            Box lowerRight = b4;
         }
         void drawHomeScreen()
         {
@@ -181,7 +192,9 @@ namespace DisplayHandling
                 }
             }
 
-            while (true) {
+            // TOUCHSENSE
+            while (true)
+            {
                 if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
                 {
                     makeTransition(Screens(Message));
@@ -204,9 +217,7 @@ namespace DisplayHandling
                 }
             }
 
-            // xTaskCreatePinnedToCore(&task, "touchSenseHome", 2048, NULL, 1, NULL, 1); !!!!!!!!!
 
-            // TOUCHSENSE
         }
 
         void drawDownloadScreen()
