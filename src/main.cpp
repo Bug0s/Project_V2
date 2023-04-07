@@ -20,7 +20,7 @@ JpegHandler jpegHandler = JpegHandler();
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  network.connectToWiFi("Macko", "Maczkonokia01");
+  //network.connectToWiFi("Macko", "Maczkonokia01");
   if (!SPIFFS.begin()) {
     Serial.println("SPIFFS initialisation failed!");
     while (1) yield(); // Stay here twiddling thumbs waiting
@@ -35,12 +35,15 @@ void setup() {
 
 void loop() {
     TouchPoint tp = displayHandler.senseTouch();
-    if (tp.isValid) {
+    if (tp.isValid && false) {
       Serial.print("X: ");
       Serial.print (tp.x);
       Serial.print(" Y: ");
       Serial.print(tp.y);
       Serial.println(" ");
+    }
+    if (displayHandler.senseObject(35,135,40,140)) {
+      displayHandler.makeTransition(Screens(Downloading));
     }
 
 }

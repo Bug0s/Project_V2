@@ -5,33 +5,77 @@
 #include "Networking.cpp"
 #include "DataHandling.cpp"
 #include "XPT2046_Touchscreen.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 using namespace DataHandling;
 
 namespace DisplayHandling
 {
-    struct TouchPoint {
+    struct TouchPoint
+    {
         int x;
         int y;
         bool isValid;
-        TouchPoint(int x, int y) {
+        TouchPoint(int x, int y)
+        {
             this->x = x;
             this->y = y;
             this->isValid = true;
         }
-        TouchPoint(bool isValid) {
+        TouchPoint(bool isValid)
+        {
             this->x = 0;
             this->y = 0;
             this->isValid = isValid;
         }
     };
+
+    enum Screens
+    {
+        Home,
+        History,
+        Downloading,
+        Message,
+        Love
+    };
+
     class DisplayHandler
     {
     private:
         Arduino_DataBus *bus = create_default_Arduino_DataBus();
         JpegHandler jpegHandler = JpegHandler();
+        struct Box
+        {
+        private:
+            uint16_t color;
+            Arduino_GFX *gfx;
 
-        
+            int width;
+            int height;
+
+        public:
+            int x1;
+            int y1;
+            int x2;
+            int y2;
+            Box(int x, int y, int width, int height, uint16_t color, Arduino_GFX *gfx)
+            {
+                this->gfx = gfx;
+                this->width = width;
+                this->height = height;
+                this->color = color;
+                this->x1 = x;
+                this->y1 = y;
+
+                this->x2 = x1 + width;
+                this->y2 = y1 + height;
+            }
+            void drawBox()
+            {
+                gfx->drawRect(x1, y1, width, height, color);
+            }
+        };
 
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
@@ -44,10 +88,8 @@ namespace DisplayHandling
             gfx->setTextColor(WHITE);
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
-            drawHomeScreen();
             ts.begin();
-            
-            
+            drawHomeScreen();
         }
 
         // Sets the background led strongness by percentage
@@ -115,23 +157,56 @@ namespace DisplayHandling
         // SCREENS
 
         // Draws the status bar
-        void createHeadline() {
-            gfx->fillRect(0,0,480,20, RED);
-            drawJpeg("/batteryCharging.jpg", 480-40, 1, gfx);
+        void createHeadline()
+        {
+            gfx->fillRect(0, 0, 480, 20, RED);
+            drawJpeg("/batteryCharging.jpg", 480 - 40, 1, gfx);
         }
         void drawHomeScreen()
         {
+            Box upperLeft = Box(35, 40, 100, 100, YELLOW, gfx);
+            Box lowerLeft = Box(140, 170, 100, 100, YELLOW, gfx);
+            Box upperRight = Box(245, 40, 100, 100, YELLOW, gfx);
+            Box lowerRight = Box(350, 170, 100, 100, YELLOW, gfx);
+            Box buttons[4] = {upperLeft, lowerLeft, upperRight, lowerRight};
             createHeadline();
 
-            //Background
+            // Background
             drawJpeg("/backgrounds/homeBackground.jpg", 0, 20, this->gfx);
+            for (int i = 0; i <= 4; i++)
+            {
+                if (i <= 3)
+                {
+                    buttons[i].drawBox();
+                }
+            }
 
-            gfx->drawRect(35, 40, 100, 100, YELLOW);   // Messages Upper left
-            gfx->drawRect(140, 170, 100, 100, YELLOW); // Heart Lower left
-            gfx->drawRect(245, 40, 100, 100, YELLOW);  // History Upper right
-            gfx->drawRect(350, 170, 100, 100, YELLOW); // ??? Lower right
+            while (true) {
+                if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
+                {
+                    makeTransition(Screens(Message));
+                    break;
+                }
+                if (senseObject(lowerLeft.x1, lowerLeft.x2, lowerLeft.y1, lowerLeft.y2))
+                {
+                    makeTransition(Screens(Love));
+                    break;
+                }
+                if (senseObject(upperRight.x1, upperRight.x2, upperRight.y1, upperRight.y2))
+                {
+                    makeTransition(Screens(History));
+                    break;
+                }
+                if (senseObject(lowerRight.x1, lowerRight.x2, lowerRight.y1, lowerRight.y2))
+                {
+                    makeTransition(Screens(Downloading));
+                    break;
+                }
+            }
 
-            
+            // xTaskCreatePinnedToCore(&task, "touchSenseHome", 2048, NULL, 1, NULL, 1); !!!!!!!!!
+
+            // TOUCHSENSE
         }
 
         void drawDownloadScreen()
@@ -157,32 +232,56 @@ namespace DisplayHandling
             gfx->drawFastHLine(420, 280, 60, YELLOW);
         }
 
-        void drawHistoryScreen() {
+        void drawHistoryScreen()
+        {
             createHeadline();
         }
 
-        void drawLoveScreen() {
+        void drawLoveScreen()
+        {
             createHeadline();
         }
 
-        void makeTransition(void (*to)()) {
-            //Transition backlight to 0
-            for (int i = 100; i<=0;) {
+        void makeTransition(Screens screenName)
+        {
+            // Transition backlight to 0
+            for (int i = 100; i > 0;)
+            {
                 setBackgroundLed(--i);
                 delay(1);
             }
-            //reset screen
+            // reset screen
             resetScreen();
-            //draw the new screen
-            to();
-            //transition backlight to 100
-            for (int i = 0; i>=100;) {
+            // draw the new screen
+            switch (screenName)
+            {
+            case Home:
+                drawHomeScreen();
+                break;
+            case History:
+                drawHistoryScreen();
+                break;
+            case Love:
+                drawLoveScreen();
+                break;
+            case Message:
+                drawMessageScreen();
+                break;
+            case Downloading:
+                drawDownloadScreen();
+                break;
+            }
+            // transition backlight to 100
+            for (int i = 0; i < 100;)
+            {
                 setBackgroundLed(++i);
                 delay(1);
             }
+            setBackgroundLed(100);
         }
 
-        TouchPoint senseTouch() {
+        TouchPoint senseTouch()
+        {
             TS_Point point = ts.getPoint();
             int maxY = 3650;
             int maxX = 3600;
@@ -190,25 +289,31 @@ namespace DisplayHandling
             double divisionY = 11.4;
             double divisionX = 7.5;
 
-            if (point.z != 0) {
+            if (point.z != 0)
+            {
                 TouchPoint corrigation = TouchPoint(point.x - 240, point.y - 260);
                 int resultX = corrigation.x / divisionX;
                 int resultY = corrigation.y / divisionY;
-                if (resultX < 0 || resultY < 0) {
+                if (resultX < 0 || resultY < 0)
+                {
                     return TouchPoint(false);
                 }
                 return TouchPoint(corrigation.x / divisionX, corrigation.y / divisionY);
-
-                
             }
             return TouchPoint(false);
         }
-        bool senseObject(int x1, int x2, int y1, int y2) {
+        bool senseObject(int x1, int x2, int y1, int y2)
+        {
             TouchPoint tp = senseTouch();
-            //Sense wether the tocuh happened within the coordinates
+            // Sense wether the tocuh happened within the coordinates
+            if (tp.x > x1 && tp.x < x2 && tp.y > y1 && tp.y < y2)
+            {
+                Serial.println(" got touched!");
+                return true;
+            }
             return false;
         }
-        
     };
+
 }
 #endif
