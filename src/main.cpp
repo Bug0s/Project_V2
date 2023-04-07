@@ -17,10 +17,16 @@ Network network = Network();
 DisplayHandler displayHandler = DisplayHandler();
 JpegHandler jpegHandler = JpegHandler();
 
+//Background thread init
+void wifiConnect(void* param) {
+  delay(2000);
+  network.connectToWiFi("Macko", "Maczkonokia01");
+  vTaskDelete(NULL);
+}
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  //network.connectToWiFi("Macko", "Maczkonokia01");
+  xTaskCreatePinnedToCore(&wifiConnect, "WiFiConnect", 3500, NULL, 1, NULL, 1);
   if (!SPIFFS.begin()) {
     Serial.println("SPIFFS initialisation failed!");
     while (1) yield(); // Stay here twiddling thumbs waiting
