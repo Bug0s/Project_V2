@@ -40,16 +40,7 @@ void setup() {
 }
 
 void loop() {
-    TouchPoint tp = displayHandler.senseTouch();
-    if (tp.isValid && false) {
-      Serial.print("X: ");
-      Serial.print (tp.x);
-      Serial.print(" Y: ");
-      Serial.print(tp.y);
-      Serial.println(" ");
-    }
-    if (displayHandler.senseObject(35,135,40,140)) {
-      displayHandler.makeTransition(Screens(Downloading));
-    }
+    
+    
 
 }

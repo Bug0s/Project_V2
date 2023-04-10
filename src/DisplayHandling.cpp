@@ -89,8 +89,8 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             ts.begin();
-            xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
-            //drawHomeScreen();
+            // xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
+            drawHomeScreen2();
         }
 
         // Sets the background led strongness by percentage
@@ -108,13 +108,14 @@ namespace DisplayHandling
         void downloadAndDisplayImage(char *link, int xpos, int ypos)
         {
             Networking::Network().downloadImage(link);
-            this->drawJpeg("/image.jpg", xpos, ypos, this->gfx);
+            this->drawJpeg("/image.jpg", xpos, ypos);
         }
 
         // Draws a JPG from SPIFFS
-        void drawJpeg(const char *filename, int xpos, int ypos, Arduino_GFX *tft)
+        void drawJpeg(const char *filename, int xpos, int ypos)
 
         {
+            Arduino_GFX *tft = this->gfx;
 
             Serial.println("===========================");
             Serial.print("Drawing file: ");
@@ -161,10 +162,9 @@ namespace DisplayHandling
         void createHeadline()
         {
             gfx->fillRect(0, 0, 480, 20, WHITE);
-            drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1, gfx); // w: 33
-            drawJpeg("/icons/WiFiOn.jpg", 440-33-15, 1, gfx); // w: 24 
-            drawJpeg("/icons/syncArrow.jpg", 440-33-15-24-15, 5, gfx); // h: 9, w:11
-
+            drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1);          // w: 33
+            drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1);              // w: 24
+            drawJpeg("/icons/syncArrow.jpg", 440 - 33 - 15 - 24 - 15, 0); // h: 9, w:11
         }
 
         void homeScreenTouch(Box b1, Box b2, Box b3, Box b4)
@@ -174,24 +174,22 @@ namespace DisplayHandling
             Box upperRight = b3;
             Box lowerRight = b4;
         }
-        void drawHomeScreen(void* params)
+        void drawHomeScreen()
         {
-            Box upperLeft = Box(35, 40, 100, 100, YELLOW, gfx);
-            Box lowerLeft = Box(140, 170, 100, 100, YELLOW, gfx);
-            Box upperRight = Box(245, 40, 100, 100, YELLOW, gfx);
-            Box lowerRight = Box(350, 170, 100, 100, YELLOW, gfx);
+            Box upperLeft = Box(110, 40, 100, 100, YELLOW, gfx);
+            Box lowerLeft = Box(110, 200, 100, 100, YELLOW, gfx);
+            Box upperRight = Box(270, 40, 100, 100, YELLOW, gfx);
+            Box lowerRight = Box(270, 200, 100, 100, YELLOW, gfx);
             Box buttons[4] = {upperLeft, lowerLeft, upperRight, lowerRight};
             createHeadline();
 
             // Background
-            drawJpeg("/backgrounds/homeBackground.jpg", 0, 20, this->gfx);
-            for (int i = 0; i <= 4; i++)
+            drawJpeg("/backgrounds/homeBackground.jpg", 0, 20);
+            for (int i = 0; i <= 3; i++)
             {
-                if (i <= 3)
-                {
-                    buttons[i].drawBox();
-                }
+                buttons[i].drawBox();
             }
+            drawJpeg("/buttonIcons/mail3p.jpg", 110, 40);
 
             // TOUCHSENSE
             while (true)
@@ -217,8 +215,46 @@ namespace DisplayHandling
                     break;
                 }
             }
+        }
+        void drawHomeScreen2()
+        {
+            Box upperLeft = Box(16, 200, 100, 100, YELLOW, gfx);
+            Box lowerLeft = Box(132, 200, 100, 100, YELLOW, gfx);
+            Box upperRight = Box(248, 200, 100, 100, YELLOW, gfx);
+            Box lowerRight = Box(364, 200, 100, 100, YELLOW, gfx);
+            Box buttons[4] = {upperLeft, lowerLeft, upperRight, lowerRight};
+            createHeadline();
+            drawJpeg("/backgrounds/homeBackground.jpg", 0, 20);
+            for (int i = 0; i <= 3; i++)
+            {
+                buttons[i].drawBox();
+            }
+            drawJpeg("/buttonIcons/mail3p.jpg", upperLeft.x1, upperLeft.y1);
 
-
+            // TOUCHSENSE
+            while (true)
+            {
+                if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
+                {
+                    makeTransition(Screens(Message));
+                    break;
+                }
+                if (senseObject(lowerLeft.x1, lowerLeft.x2, lowerLeft.y1, lowerLeft.y2))
+                {
+                    makeTransition(Screens(Love));
+                    break;
+                }
+                if (senseObject(upperRight.x1, upperRight.x2, upperRight.y1, upperRight.y2))
+                {
+                    makeTransition(Screens(History));
+                    break;
+                }
+                if (senseObject(lowerRight.x1, lowerRight.x2, lowerRight.y1, lowerRight.y2))
+                {
+                    makeTransition(Screens(Downloading));
+                    break;
+                }
+            }
         }
 
         void drawDownloadScreen()
