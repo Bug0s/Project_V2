@@ -89,7 +89,8 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             ts.begin();
-            drawHomeScreen();
+            xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
+            //drawHomeScreen();
         }
 
         // Sets the background led strongness by percentage
@@ -173,7 +174,7 @@ namespace DisplayHandling
             Box upperRight = b3;
             Box lowerRight = b4;
         }
-        void drawHomeScreen()
+        void drawHomeScreen(void* params)
         {
             Box upperLeft = Box(35, 40, 100, 100, YELLOW, gfx);
             Box lowerLeft = Box(140, 170, 100, 100, YELLOW, gfx);
