@@ -20,12 +20,14 @@ JpegHandler jpegHandler = JpegHandler();
 //Background thread init
 void backGroundInit(void* param) {
   network.connectToWiFi("Macko", "Maczkonokia01");
+  network.getQueueStatus();
   vTaskDelete(NULL);
 }
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(36, OUTPUT);
+  
+  network.connectToWiFi("Macko", "Maczkonokia01");
   xTaskCreatePinnedToCore(&backGroundInit, "WiFiConnect", 3500, NULL, 1, NULL, 1);
   if (!SPIFFS.begin()) {
     Serial.println("SPIFFS initialisation failed!");
@@ -35,12 +37,12 @@ void setup() {
   
   //network.donwloadImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg");
 
+
   
   
 }
 
 void loop() {
-    
     
 
 }

@@ -9,6 +9,7 @@
 #include "freertos/task.h"
 
 using namespace DataHandling;
+using namespace Networking;
 
 namespace DisplayHandling
 {
@@ -45,6 +46,7 @@ namespace DisplayHandling
     private:
         Arduino_DataBus *bus = create_default_Arduino_DataBus();
         JpegHandler jpegHandler = JpegHandler();
+        Network network = Network();
         struct Box
         {
         private:
@@ -116,12 +118,12 @@ namespace DisplayHandling
 
         {
             Arduino_GFX *tft = this->gfx;
-
+            /*
             Serial.println("===========================");
             Serial.print("Drawing file: ");
             Serial.println(filename);
             Serial.println("===========================");
-
+            */
             // Open the named file (the Jpeg decoder library will close it after rendering image)
             fs::File jpegFile = SPIFFS.open(filename, "r"); // File handle reference for SPIFFS
             //  File jpegFile = SD.open( filename, FILE_READ);  // or, file handle reference for SD library
@@ -267,6 +269,9 @@ namespace DisplayHandling
             gfx->setTextColor(WHITE);
             gfx->setTextSize(2);
             gfx->println("Üzenet letöltése..."); // ??
+            //gfx->drawChar(5, 30, 'é', WHITE, BLACK); // á
+            //gfx->drawChar(50, 30, 'á', WHITE, BLACK); // é
+            //gfx->drawChar(150, 30, 'ü', WHITE, BLACK); // ü
         }
 
         void drawMessageScreen()
@@ -278,6 +283,12 @@ namespace DisplayHandling
             // BUTTONS
             gfx->drawRect(420, 240, 60, 80, YELLOW); // may should be ROUNDED?
             gfx->drawFastHLine(420, 280, 60, YELLOW);
+
+            QueueItem item = network.getLastQueue();
+            Serial.println("Downloading: " + item.image);
+            network.downloadImage(item.image);
+            drawJpeg("/image.jpg", 200, 200);
+            network.lastPostDisplayed();
         }
 
         void drawHistoryScreen()

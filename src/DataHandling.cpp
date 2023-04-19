@@ -95,10 +95,10 @@ namespace DataHandling
             drawTime = millis() - drawTime; // Calculate the time it took
 
             // print the results to the serial port
-            Serial.print("Total render time was    : ");
+           /* Serial.print("Total render time was    : ");
             Serial.print(drawTime);
             Serial.println(" ms");
-            Serial.println("=====================================");
+            Serial.println("=====================================");*/
         }
     };
 }
