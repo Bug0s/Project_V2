@@ -127,8 +127,8 @@ namespace Networking
         }
 
         QueueItem getLastQueue() {
-            bool check = getQueueStatus() > 0;
-            Serial.println(check);
+            int queueStatus = getQueueStatus();
+            bool check = queueStatus > 0;
             if (check) {
                 HTTPClient http;
                 http.begin(baseUrl + "/get/queue/last");

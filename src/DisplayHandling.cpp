@@ -85,6 +85,8 @@ namespace DisplayHandling
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
         XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
+
+        int messageCount;
         void initTFT()
         {
             gfx->begin();
@@ -275,6 +277,7 @@ namespace DisplayHandling
             //gfx->drawChar(5, 30, 'é', WHITE, BLACK); // á
             //gfx->drawChar(50, 30, 'á', WHITE, BLACK); // é
             //gfx->drawChar(150, 30, 'ü', WHITE, BLACK); // ü
+            this->messageCount = network.getQueueStatus();
             queueItem = network.getLastQueue();
             network.downloadImage(queueItem.image);
             makeTransition(Screens(Message));
@@ -291,11 +294,8 @@ namespace DisplayHandling
             gfx->drawRect(420, 240, 60, 80, YELLOW); // may should be ROUNDED?
             gfx->drawFastHLine(420, 280, 60, YELLOW);
 
-            QueueItem item = network.getLastQueue();
             drawJpeg(localImage, 40, 40);
             network.lastPostDisplayed();
-
-            makeTransition(Screens(Message));
         }
 
         void drawHistoryScreen()
