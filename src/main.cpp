@@ -20,7 +20,6 @@ JpegHandler jpegHandler = JpegHandler();
 //Background thread init
 void backGroundInit(void* param) {
   network.connectToWiFi("Macko", "Maczkonokia01");
-  network.getQueueStatus();
   vTaskDelete(NULL);
 }
 void setup() {

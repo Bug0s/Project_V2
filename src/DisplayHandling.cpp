@@ -47,6 +47,8 @@ namespace DisplayHandling
         Arduino_DataBus *bus = create_default_Arduino_DataBus();
         JpegHandler jpegHandler = JpegHandler();
         Network network = Network();
+        QueueItem queueItem;
+        const char* localImage = "/image.jpg";
         struct Box
         {
         private:
@@ -78,6 +80,7 @@ namespace DisplayHandling
                 gfx->drawRect(x1, y1, width, height, color);
             }
         };
+
 
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
@@ -238,7 +241,7 @@ namespace DisplayHandling
             {
                 if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
                 {
-                    makeTransition(Screens(Message));
+                    makeTransition(Screens(Downloading));
                     break;
                 }
                 if (senseObject(lowerLeft.x1, lowerLeft.x2, lowerLeft.y1, lowerLeft.y2))
@@ -272,23 +275,27 @@ namespace DisplayHandling
             //gfx->drawChar(5, 30, 'é', WHITE, BLACK); // á
             //gfx->drawChar(50, 30, 'á', WHITE, BLACK); // é
             //gfx->drawChar(150, 30, 'ü', WHITE, BLACK); // ü
+            queueItem = network.getLastQueue();
+            network.downloadImage(queueItem.image);
+            makeTransition(Screens(Message));
+            
         }
 
         void drawMessageScreen()
         {
             createHeadline();
 
-            gfx->fillRect(50, 40, 380, 100, BLUE);
+            //gfx->fillRect(50, 40, 380, 100, BLUE);
 
             // BUTTONS
             gfx->drawRect(420, 240, 60, 80, YELLOW); // may should be ROUNDED?
             gfx->drawFastHLine(420, 280, 60, YELLOW);
 
             QueueItem item = network.getLastQueue();
-            Serial.println("Downloading: " + item.image);
-            network.downloadImage(item.image);
-            drawJpeg("/image.jpg", 200, 200);
+            drawJpeg(localImage, 40, 40);
             network.lastPostDisplayed();
+
+            makeTransition(Screens(Message));
         }
 
         void drawHistoryScreen()
