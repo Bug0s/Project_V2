@@ -26,7 +26,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   
-  network.connectToWiFi("Macko", "Maczkonokia01");
+  //network.connectToWiFi("Macko", "Maczkonokia01");
   xTaskCreatePinnedToCore(&backGroundInit, "WiFiConnect", 3500, NULL, 1, NULL, 1);
   if (!SPIFFS.begin()) {
     Serial.println("SPIFFS initialisation failed!");

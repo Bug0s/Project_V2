@@ -11,21 +11,7 @@
 
 namespace Networking
 {
-    class ImageData
-    {
-    public:
-        uint8_t imageData;
-        size_t imageSize;
-        const uint8_t *imageDataPtr;
-        ImageData(uint8_t data, size_t size)
-        {
-            this->imageData = data;
-            this->imageSize = size;
-            this->imageDataPtr = &imageData;
-            Serial.println("Class contruct:!");
-            Serial.println(sizeof(*imageDataPtr));
-        }
-    };
+    
     class QueueItem {
     public:
         int id;

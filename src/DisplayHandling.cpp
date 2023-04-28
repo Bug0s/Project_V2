@@ -267,7 +267,7 @@ namespace DisplayHandling
         void drawDownloadScreen()
         {
             createHeadline();
-
+            setBackgroundLed(100);
             gfx->drawRect(100, 60, 200, 280, RED);
 
             gfx->setCursor(120, 75);
@@ -277,10 +277,12 @@ namespace DisplayHandling
             //gfx->drawChar(5, 30, 'é', WHITE, BLACK); // á
             //gfx->drawChar(50, 30, 'á', WHITE, BLACK); // é
             //gfx->drawChar(150, 30, 'ü', WHITE, BLACK); // ü
+            delay(50);
             this->messageCount = network.getQueueStatus();
             queueItem = network.getLastQueue();
+            Serial.println(queueItem.image);
             network.downloadImage(queueItem.image);
-            makeTransition(Screens(Message));
+            //makeTransition(Screens(Message));
             
         }
 
