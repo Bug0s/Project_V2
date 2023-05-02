@@ -170,7 +170,12 @@ namespace DisplayHandling
         {
             gfx->fillRect(0, 0, 480, 20, WHITE);
             drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1);          // w: 33
-            drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1);              // w: 24
+            if (WiFi.status() == WL_CONNECTED) {
+                drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1);              // w: 24
+            } else {
+                drawJpeg("/icons/WiFiOff.jpg", 440 - 33 - 15, 1);              // w: 24
+            }
+            
             drawJpeg("/icons/syncArrow.jpg", 440 - 33 - 15 - 24 - 15, 0); // h: 9, w:11
         }
 
