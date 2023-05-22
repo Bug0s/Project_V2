@@ -239,6 +239,9 @@ namespace DisplayHandling
             drawJpeg("/buttonIcons/mail3p.jpg", upperLeft.x1, upperLeft.y1);
 
             // TOUCHSENSE
+            void senseTouchHome(void* params) {
+                
+            }
             while (true)
             {
                 if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
