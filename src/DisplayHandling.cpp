@@ -295,8 +295,7 @@ namespace DisplayHandling
             createHeadline();
 
             gfx->setCursor(100,100);
-            gfx->write(0xC3);
-            gfx->write(0xA9);
+            gfx->print("é");
         }
 
         void makeTransition(Screens screenName)
