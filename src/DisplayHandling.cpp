@@ -7,9 +7,11 @@
 #include "XPT2046_Touchscreen.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "TaskHandler.h"
 
 using namespace DataHandling;
 using namespace Networking;
+using namespace TaskHandler;
 
 namespace DisplayHandling
 {
@@ -48,7 +50,15 @@ namespace DisplayHandling
         JpegHandler jpegHandler = JpegHandler();
         Network network = Network();
         QueueItem queueItem;
-        const char* localImage = "/image.jpg";
+        const char *localImage = "/image.jpg";
+        //If true the user should not view any new messages!
+        bool blockMessages = false;
+        void badConnection() {
+            this->blockMessages = true;
+        }
+        void goodConnection() {
+            this->blockMessages = false; 
+        }
         struct Box
         {
         private:
@@ -81,7 +91,6 @@ namespace DisplayHandling
             }
         };
 
-
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
         XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
@@ -97,7 +106,9 @@ namespace DisplayHandling
             setBackgroundLed(100);
             ts.begin();
             // xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
-            drawHomeScreen2();
+            drawLoveScreen();
+            //It should be HOMESCREEN to drawn!!! / testCase
+            //xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 100000, NULL, 1, TaskHandlers::drawHomeScreen);
         }
 
         // Sets the background led strongness by percentage
@@ -123,17 +134,7 @@ namespace DisplayHandling
 
         {
             Arduino_GFX *tft = this->gfx;
-            /*
-            Serial.println("===========================");
-            Serial.print("Drawing file: ");
-            Serial.println(filename);
-            Serial.println("===========================");
-            */
-            // Open the named file (the Jpeg decoder library will close it after rendering image)
             fs::File jpegFile = SPIFFS.open(filename, "r"); // File handle reference for SPIFFS
-            //  File jpegFile = SD.open( filename, FILE_READ);  // or, file handle reference for SD library
-
-            // ESP32 always seems to return 1 for jpegFile so this null trap does not work
             if (!jpegFile)
             {
                 Serial.print("ERROR: File \"");
@@ -142,19 +143,10 @@ namespace DisplayHandling
                 return;
             }
 
-            // Use one of the three following methods to initialise the decoder,
-            // the filename can be a String or character array type:
-
-            // boolean decoded = JpegDec.decodeFsFile(jpegFile); // Pass a SPIFFS file handle to the decoder,
-            // boolean decoded = JpegDec.decodeSdFile(jpegFile); // or pass the SD file handle to the decoder,
             boolean decoded = JpegDec.decodeFsFile(filename); // or pass the filename (leading / distinguishes SPIFFS files)
 
             if (decoded)
             {
-                // print information about the image to the serial port
-                // jpegInfo();
-
-                // render the image onto the screen at given coordinates
                 JpegHandler::jpegRender(xpos, ypos, tft);
             }
             else
@@ -165,70 +157,41 @@ namespace DisplayHandling
 
         // SCREENS
 
-        // Draws the status bar
+        // Draws the status bar; It should be the first thing that renders at a new screen!
         void createHeadline()
         {
+            /*DataHandling::ProcessHandler::ConnectionStatusCheck connectionStatus = ProcessHandler::checkConnectionStatuses();
+            if (connectionStatus.networkCorrect && connectionStatus.serverCorrect) {
+                this->goodConnection();
+            } else { this->badConnection(); }*/
+
             gfx->fillRect(0, 0, 480, 20, WHITE);
-            drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1);          // w: 33
-            if (WiFi.status() == WL_CONNECTED) {
-                drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1);              // w: 24
-            } else {
-                drawJpeg("/icons/WiFiOff.jpg", 440 - 33 - 15, 1);              // w: 24
-            }
+            drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1); // w: 33
             
-            drawJpeg("/icons/syncArrow.jpg", 440 - 33 - 15 - 24 - 15, 0); // h: 9, w:11
+            if (true)
+            {
+                drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1); // w: 24
+            }
+            else
+            {
+                drawJpeg("/icons/WiFiOff.jpg", 440 - 33 - 15, 1); // w: 24
+            }
+
+            if (true) {
+                drawJpeg("/icons/syncArrow.jpg", 440 - 33 - 15 - 24 - 15, 0); // h: 9, w:11
+            } else {
+                //OBJ: Draw an icon that indicates that there is Null connection to the server
+            }
+
         }
 
-        void homeScreenTouch(Box b1, Box b2, Box b3, Box b4)
-        {
-            Box upperLeft = b1;
-            Box lowerLeft = b2;
-            Box upperRight = b3;
-            Box lowerRight = b4;
+        // @brief Needs to stop via taskHandler 'drawHomeScreen'!
+        static void taskDrawHomeScreen(void*params) {
+            DisplayHandler dp = DisplayHandler();
+            dp.drawHomeScreen();
+
         }
         void drawHomeScreen()
-        {
-            Box upperLeft = Box(110, 40, 100, 100, YELLOW, gfx);
-            Box lowerLeft = Box(110, 200, 100, 100, YELLOW, gfx);
-            Box upperRight = Box(270, 40, 100, 100, YELLOW, gfx);
-            Box lowerRight = Box(270, 200, 100, 100, YELLOW, gfx);
-            Box buttons[4] = {upperLeft, lowerLeft, upperRight, lowerRight};
-            createHeadline();
-
-            // Background
-            drawJpeg("/backgrounds/homeBackground.jpg", 0, 20);
-            for (int i = 0; i <= 3; i++)
-            {
-                buttons[i].drawBox();
-            }
-            drawJpeg("/buttonIcons/mail3p.jpg", 110, 40);
-
-            // TOUCHSENSE
-            while (true)
-            {
-                if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
-                {
-                    makeTransition(Screens(Message));
-                    break;
-                }
-                if (senseObject(lowerLeft.x1, lowerLeft.x2, lowerLeft.y1, lowerLeft.y2))
-                {
-                    makeTransition(Screens(Love));
-                    break;
-                }
-                if (senseObject(upperRight.x1, upperRight.x2, upperRight.y1, upperRight.y2))
-                {
-                    makeTransition(Screens(History));
-                    break;
-                }
-                if (senseObject(lowerRight.x1, lowerRight.x2, lowerRight.y1, lowerRight.y2))
-                {
-                    makeTransition(Screens(Downloading));
-                    break;
-                }
-            }
-        }
-        void drawHomeScreen2()
         {
             Box upperLeft = Box(16, 200, 100, 100, YELLOW, gfx);
             Box lowerLeft = Box(132, 200, 100, 100, YELLOW, gfx);
@@ -244,32 +207,33 @@ namespace DisplayHandling
             drawJpeg("/buttonIcons/mail3p.jpg", upperLeft.x1, upperLeft.y1);
 
             // TOUCHSENSE
-            void senseTouchHome(void* params) {
-                
-            }
-            while (true)
+            auto senseTouch = [&](void *params)
             {
-                if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
+                while (true)
                 {
-                    makeTransition(Screens(Downloading));
-                    break;
+                    if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
+                    {
+                        makeTransition(Screens(Downloading));
+                        break;
+                    }
+                    if (senseObject(lowerLeft.x1, lowerLeft.x2, lowerLeft.y1, lowerLeft.y2))
+                    {
+                        makeTransition(Screens(Love));
+                        break;
+                    }
+                    if (senseObject(upperRight.x1, upperRight.x2, upperRight.y1, upperRight.y2))
+                    {
+                        makeTransition(Screens(History));
+                        break;
+                    }
+                    if (senseObject(lowerRight.x1, lowerRight.x2, lowerRight.y1, lowerRight.y2))
+                    {
+                        makeTransition(Screens(Downloading));
+                        break;
+                    }
                 }
-                if (senseObject(lowerLeft.x1, lowerLeft.x2, lowerLeft.y1, lowerLeft.y2))
-                {
-                    makeTransition(Screens(Love));
-                    break;
-                }
-                if (senseObject(upperRight.x1, upperRight.x2, upperRight.y1, upperRight.y2))
-                {
-                    makeTransition(Screens(History));
-                    break;
-                }
-                if (senseObject(lowerRight.x1, lowerRight.x2, lowerRight.y1, lowerRight.y2))
-                {
-                    makeTransition(Screens(Downloading));
-                    break;
-                }
-            }
+            };
+
         }
 
         void drawDownloadScreen()
@@ -282,23 +246,27 @@ namespace DisplayHandling
             gfx->setTextColor(WHITE);
             gfx->setTextSize(2);
             gfx->println("Üzenet letöltése..."); // ??
-            //gfx->drawChar(5, 30, 'é', WHITE, BLACK); // á
-            //gfx->drawChar(50, 30, 'á', WHITE, BLACK); // é
-            //gfx->drawChar(150, 30, 'ü', WHITE, BLACK); // ü
+            // gfx->drawChar(5, 30, 'é', WHITE, BLACK); // á
+            // gfx->drawChar(50, 30, 'á', WHITE, BLACK); // é
+            // gfx->drawChar(150, 30, 'ü', WHITE, BLACK); // ü
             delay(50);
             this->messageCount = network.getQueueStatus();
             queueItem = network.getLastQueue();
             Serial.println(queueItem.image);
             network.downloadImage(queueItem.image);
-            //makeTransition(Screens(Message));
-            
+            // makeTransition(Screens(Message));
         }
 
+
+        static void taskDrawMessageScreen(void* params) {
+            DisplayHandler dp = DisplayHandler();
+            dp.drawMessageScreen();
+        }
         void drawMessageScreen()
         {
             createHeadline();
 
-            //gfx->fillRect(50, 40, 380, 100, BLUE);
+            // gfx->fillRect(50, 40, 380, 100, BLUE);
 
             // BUTTONS
             gfx->drawRect(420, 240, 60, 80, YELLOW); // may should be ROUNDED?
@@ -308,14 +276,27 @@ namespace DisplayHandling
             network.lastPostDisplayed();
         }
 
+        static void taskDrawHistoryScreen(void* params) {
+            DisplayHandler dp = DisplayHandler();
+            dp.drawHistoryScreen();
+        }
         void drawHistoryScreen()
         {
             createHeadline();
+
         }
 
+        static void taskDrawLoveScreen(void* params) {
+            DisplayHandler dp = DisplayHandler();
+            dp.drawLoveScreen();
+        }
         void drawLoveScreen()
         {
             createHeadline();
+
+            gfx->setCursor(100,100);
+            gfx->write(0xC3);
+            gfx->write(0xA9);
         }
 
         void makeTransition(Screens screenName)
@@ -333,15 +314,17 @@ namespace DisplayHandling
             {
             case Home:
                 drawHomeScreen();
+                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 10000, NULL, 1, TaskHandlers::drawHomeScreen);
                 break;
             case History:
                 drawHistoryScreen();
                 break;
             case Love:
                 drawLoveScreen();
+                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 10000, NULL, 1, TaskHandlers::drawLoveScreen);
                 break;
             case Message:
-                drawMessageScreen();
+                xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 10000, NULL, 1, TaskHandlers::drawMessageScreen);
                 break;
             case Downloading:
                 drawDownloadScreen();

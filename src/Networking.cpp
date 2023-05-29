@@ -89,13 +89,7 @@ namespace Networking
             http.end();
         }
 
-        bool checkServerStatus() {
-            HTTPClient http;
-
-            http.begin(baseUrl + "/checkServer");
-            int httpCode = http.GET();
-            if (httpCode == 200) return true;  else  return false; 
-        }
+        
 
         int getQueueStatus() {
             HTTPClient http;

@@ -6,6 +6,10 @@
 #include <FS.h>
 #include <Arduino_GFX_Library.h>
 #include "Networking.cpp"
+#include "TaskHandler.h"
+#include "WiFi.h"
+
+
 
 #define minimum(a, b) (((a) < (b)) ? (a) : (b))
 namespace DataHandling
@@ -13,14 +17,15 @@ namespace DataHandling
     class JpegHandler
     {
     public:
-        static bool decodeArray(const uint8_t* jpgArr, size_t size) {
+        static bool decodeArray(const uint8_t *jpgArr, size_t size)
+        {
             Serial.println("starting to decode");
             Serial.println(sizeof(*jpgArr));
             bool decoded = JpegDec.decodeArray(jpgArr, size);
-            return (decoded) ? true :  false;
+            return (decoded) ? true : false;
         }
-        
-        static void jpegRender(int xpos, int ypos, Arduino_GFX* tft)
+
+        static void jpegRender(int xpos, int ypos, Arduino_GFX *tft)
         {
 
             // retrieve infomration about the image
@@ -95,11 +100,47 @@ namespace DataHandling
             drawTime = millis() - drawTime; // Calculate the time it took
 
             // print the results to the serial port
-           /* Serial.print("Total render time was    : ");
-            Serial.print(drawTime);
-            Serial.println(" ms");
-            Serial.println("=====================================");*/
+            /* Serial.print("Total render time was    : ");
+             Serial.print(drawTime);
+             Serial.println(" ms");
+             Serial.println("=====================================");*/
         }
+
+        //Should used inside main.cpp::setup()
+        
+    };
+
+    class ProcessHandler {
+        private:
+        static bool checkNetworkStatus() {
+            return WiFi.status() == WL_CONNECTED;
+        }
+        static bool checkServerStatus() {
+            HTTPClient http;
+
+            http.begin("http://80.99.154.229:5000/checkServer");
+            int httpCode = http.GET();
+            if (httpCode == 200) return true;  else  return false; 
+        }
+
+        public:
+        typedef struct 
+        {
+            bool networkCorrect;
+            bool serverCorrect;
+        } ConnectionStatusCheck;
+        
+        static ConnectionStatusCheck checkConnectionStatuses() {
+            bool networkStatus = ProcessHandler::checkNetworkStatus();
+            bool serverStatus = ProcessHandler::checkServerStatus();
+            ConnectionStatusCheck statusCheck;
+            statusCheck.networkCorrect = networkStatus;
+            statusCheck.serverCorrect = serverStatus;
+
+            return statusCheck;
+        }
+
+        
     };
 }
 #endif
