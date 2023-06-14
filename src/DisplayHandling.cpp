@@ -160,15 +160,16 @@ namespace DisplayHandling
         // Draws the status bar; It should be the first thing that renders at a new screen!
         void createHeadline()
         {
-            /*DataHandling::ProcessHandler::ConnectionStatusCheck connectionStatus = ProcessHandler::checkConnectionStatuses();
+            DataHandling::ProcessHandler::ConnectionStatusCheck connectionStatus = ProcessHandler::checkConnectionStatuses();
             if (connectionStatus.networkCorrect && connectionStatus.serverCorrect) {
                 this->goodConnection();
-            } else { this->badConnection(); }*/
+            } else { this->badConnection(); }
 
             gfx->fillRect(0, 0, 480, 20, WHITE);
+
             drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1); // w: 33
             
-            if (true)
+            if (connectionStatus.networkCorrect)
             {
                 drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1); // w: 24
             }
@@ -177,11 +178,12 @@ namespace DisplayHandling
                 drawJpeg("/icons/WiFiOff.jpg", 440 - 33 - 15, 1); // w: 24
             }
 
-            if (true) {
-                drawJpeg("/icons/syncArrow.jpg", 440 - 33 - 15 - 24 - 15, 0); // h: 9, w:11
+            if (connectionStatus.serverCorrect) {
+                drawJpeg("/icons/connectedS.jpg", 480 - 33-15-24-15-30, 0);
             } else {
-                //OBJ: Draw an icon that indicates that there is Null connection to the server
+                drawJpeg("/icons/notConnectedS.jpg", 480 - 33-15-24-15-30, 0);
             }
+            
 
         }
 
@@ -295,8 +297,11 @@ namespace DisplayHandling
             createHeadline();
 
             gfx->setCursor(100,100);
-            gfx->print("é");
+            gfx->print("erem");
+            gfx->drawLine(103,99,105,94,WHITE);
+            gfx->drawLine(102,98,104,93,WHITE);        
         }
+        
 
         void makeTransition(Screens screenName)
         {

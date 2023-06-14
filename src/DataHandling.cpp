@@ -118,9 +118,11 @@ namespace DataHandling
         static bool checkServerStatus() {
             HTTPClient http;
 
-            http.begin("http://80.99.154.229:5000/checkServer");
+
+            http.begin("http://80.99.154.229:5000/success");
             int httpCode = http.GET();
-            if (httpCode == 200) return true;  else  return false; 
+            http.end();
+            if (httpCode == 200) return true;  else  return false;
         }
 
         public:
