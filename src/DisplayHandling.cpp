@@ -59,6 +59,89 @@ namespace DisplayHandling
         void goodConnection() {
             this->blockMessages = false; 
         }
+
+        void displayComplexText(char* text) {
+
+            const char* unsafeChars[9] = {"á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű"};
+
+            bool isCurrentCharSafe = false;
+
+            for (int i=0; i <= sizeof(text); i++) {
+                char currentChar = text[i];
+                for (int j = 0; j<= sizeof(unsafeChars) /* 8, because the unsafeChar arr is 9 member*/; j++) {
+                    if (currentChar == *unsafeChars[j]) {
+                        // UNSAFE CHAR !!
+                        isCurrentCharSafe = false;
+                        break;
+
+                    }
+                    else if(j == 8) {
+                        // SAFE CHAR !!
+                        isCurrentCharSafe = true;
+                        gfx->print(currentChar);
+                    }
+                } // Safe check
+
+                if (!isCurrentCharSafe) {
+                    int16_t cursorX = gfx->getCursorX();
+                    int16_t cursorY = gfx->getCursorY();
+
+                    switch (currentChar)
+                    {
+                    case 'á':
+                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->print("a");
+                        break;
+
+                    case 'é':
+                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->print("e");
+                        break;
+                    
+                    case 'í':
+                        gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 2, cursorY + 2 + 4, WHITE);
+                        gfx->print("i");
+                        break;
+
+                    case 'ó':
+                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->print("o");
+                        break;
+                    case 'ö':
+                        gfx->drawPixel(cursorX + 2, cursorY + 3, WHITE);
+                        gfx->drawPixel(cursorX + 4, cursorY + 3, WHITE);
+                        gfx->print("o");
+                        break;
+                    case 'ő':
+                        gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 3, cursorY + 2, cursorX + 3 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->print("o");
+
+                    case 'ú':
+                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->print("u");
+                        break;
+
+                    case 'ü':
+                        gfx->drawPixel(cursorX + 2, cursorY + 3, WHITE);
+                        gfx->drawPixel(cursorX + 4, cursorY + 3, WHITE);
+                        gfx->print("u");
+                        break;
+                    case 'ű':
+                        gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 3, cursorY + 2, cursorX + 3 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->print("u");
+                    default:
+                        Serial.println("ERROR: Displayhandling::displayComplexText UNIDENTIFIED CHARACTER!");
+                        break;
+                    }
+                }
+
+            }
+
+
+
+        }
         struct Box
         {
         private:
@@ -297,9 +380,7 @@ namespace DisplayHandling
             createHeadline();
 
             gfx->setCursor(100,100);
-            gfx->print("erem");
-            gfx->drawLine(103,99,105,94,WHITE);
-            gfx->drawLine(102,98,104,93,WHITE);        
+            this->displayComplexText("teszt a á e é i í o ó ö ő u ú ü ű. Teszt vége");     
         }
         
 
