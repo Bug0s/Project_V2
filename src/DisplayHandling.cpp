@@ -62,15 +62,16 @@ namespace DisplayHandling
             this->blockMessages = false;
         }
 
-        bool isSpecialChar(char c)
+        bool isSpecialChar(wchar_t c)
         {
-            const char *specialChars[] = {"á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű"};
+            const wchar_t *specialChars[] = {L"á", L"é", L"í", L"ó", L"ö", L"ő", L"ú", L"ü", L"ű"};
             int numSpecialChars = sizeof(specialChars) / sizeof(specialChars[0]);
 
             for (int i = 0; i < numSpecialChars; i++)
             {
                 if (c == specialChars[i][0])
                 {
+                    Serial.println("Talalat");
                     return true;
                 }
             }
@@ -78,77 +79,68 @@ namespace DisplayHandling
             return false;
         }
 
-        void displayComplexText(String text)
+        void displayComplexText(wchar_t* text)
         {
-            for (int i = 0; i < text.length(); i++)
+            for (int i = 0; i < wcslen(text); i++)
             {
-                char currentChar = text.charAt(i);
+                wchar_t currentChar = text[i];
                 if (isSpecialChar(currentChar)) {
                     //Not safe
                     Serial.println(currentChar);
                     int16_t cursorX = gfx->getCursorX();
                     int16_t cursorY = gfx->getCursorY();
                     Serial.println(currentChar);
-                    if (currentChar == *"á")
+                    if (currentChar == *L"á")
                     {
                         gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
                         gfx->print("a");
-                        i++;
                     }
 
-                    else if (currentChar == *"é")
+                    else if (currentChar == *L"é")
                     {
                         gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
                         gfx->print("e");
-                        i++;
                     }
-                    else if (currentChar == *"í")
+                    else if (currentChar == *L"í")
                     {
                         gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 2, cursorY + 2 + 4, WHITE);
                         gfx->print("i");
-                        i++;
                     }
 
-                    else if (currentChar == *"ó")
+                    else if (currentChar == *L"ó")
                     {
                         gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
                         gfx->print("o");
-                        i++;
                     }
-                    else if (currentChar == *"ö")
+                    else if (currentChar == *L"ö")
                     {
                         gfx->drawPixel(cursorX + 2, cursorY + 3, WHITE);
                         gfx->drawPixel(cursorX + 4, cursorY + 3, WHITE);
                         gfx->print("o");
-                        i++;
                     }
-                    else if (currentChar == *"ő")
+                    else if (currentChar == *L"ő")
                     {
                         gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 4, cursorY + 2 + 4, WHITE);
                         gfx->drawLine(cursorX + 3, cursorY + 2, cursorX + 3 + 4, cursorY + 2 + 4, WHITE);
                         gfx->print("o");
-                        i++;
                     }
-                    else if (currentChar == *"ú")
+                    else if (currentChar == *L"ú")
                     {
                         gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
                         gfx->print("u");
-                        i++;
                     }
 
-                    else if (currentChar == *"ü")
+                    else if (currentChar == *L"ü")
                     {
                         gfx->drawPixel(cursorX + 2, cursorY + 3, WHITE);
                         gfx->drawPixel(cursorX + 4, cursorY + 3, WHITE);
                         gfx->print("u");
-                        i++;
                     }
-                    else if (currentChar == *"ű")
+                    else if (currentChar == *L"ű")
                     {
                         gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 4, cursorY + 2 + 4, WHITE);
                         gfx->drawLine(cursorX + 3, cursorY + 2, cursorX + 3 + 4, cursorY + 2 + 4, WHITE);
                         gfx->print("u");
-                        i++;
                     }
                     else
                     {
@@ -156,7 +148,7 @@ namespace DisplayHandling
                     }
                 } else {
                     //safe
-                    gfx->print(currentChar);
+                    gfx->print((char)text[i]);
                     continue;
                 }
             }
@@ -407,10 +399,10 @@ namespace DisplayHandling
 
             gfx->setCursor(100, 100);
             //this->displayComplexText("á");
-             this->displayComplexText("teszt a á e é i í o ó ö ő u ú ü ű. Teszt vége");
+             this->displayComplexText(L"teszt a á e é i í o ó ö ő u ú ü ű. Teszt vége");
             // this->displayComplexText("Tésztás");
             return;
-            this->displayComplexText("display text");
+            this->displayComplexText(L"display text");
         }
 
         void makeTransition(Screens screenName)
