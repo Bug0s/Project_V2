@@ -92,24 +92,28 @@ namespace DisplayHandling
                     Serial.println(currentChar);
                     if (currentChar == *L"á")
                     {
-                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
                         gfx->print("a");
                     }
 
                     else if (currentChar == *L"é")
                     {
-                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
                         gfx->print("e");
                     }
                     else if (currentChar == *L"í")
                     {
-                        gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 2, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
                         gfx->print("i");
                     }
 
                     else if (currentChar == *L"ó")
                     {
-                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
                         gfx->print("o");
                     }
                     else if (currentChar == *L"ö")
@@ -120,13 +124,18 @@ namespace DisplayHandling
                     }
                     else if (currentChar == *L"ő")
                     {
-                        gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 4, cursorY + 2 + 4, WHITE);
-                        gfx->drawLine(cursorX + 3, cursorY + 2, cursorX + 3 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
+
+                        gfx->drawLine(cursorX + 6, cursorY - 0, cursorX + 6 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 7, cursorY - 0, cursorX + 7 + 2, cursorY - 0 - 2, WHITE);
+
                         gfx->print("o");
                     }
                     else if (currentChar == *L"ú")
                     {
-                        gfx->drawLine(cursorX + 2, cursorY + 2, cursorX + 2 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
                         gfx->print("u");
                     }
 
@@ -138,8 +147,12 @@ namespace DisplayHandling
                     }
                     else if (currentChar == *L"ű")
                     {
-                        gfx->drawLine(cursorX + 1, cursorY + 2, cursorX + 1 + 4, cursorY + 2 + 4, WHITE);
-                        gfx->drawLine(cursorX + 3, cursorY + 2, cursorX + 3 + 4, cursorY + 2 + 4, WHITE);
+                        gfx->drawLine(cursorX + 2, cursorY - 0, cursorX + 2 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
+
+                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
+                        gfx->drawLine(cursorX + 6, cursorY - 0, cursorX + 6 + 2, cursorY - 0 - 2, WHITE);
+
                         gfx->print("u");
                     }
                     else
