@@ -62,16 +62,18 @@ namespace DisplayHandling
             this->blockMessages = false;
         }
 
+        wchar_t* textSegmentationForWchar(wchar_t* text) {
+           
+        }
         bool isSpecialChar(wchar_t c)
         {
-            const wchar_t *specialChars[] = {L"á", L"é", L"í", L"ó", L"ö", L"ő", L"ú", L"ü", L"ű"};
+            const wchar_t *specialChars[] = {L"á", L"é", L"í", L"ó", L"ö", L"ő", L"ú", L"ü", L"ű", L"Á", L"É", L"Í", L"Ó", L"Ö", L"Ő", L"Ú", L"Ü", L"Ű"};
             int numSpecialChars = sizeof(specialChars) / sizeof(specialChars[0]);
 
             for (int i = 0; i < numSpecialChars; i++)
             {
                 if (c == specialChars[i][0])
                 {
-                    Serial.println("Talalat");
                     return true;
                 }
             }
@@ -86,10 +88,8 @@ namespace DisplayHandling
                 wchar_t currentChar = text[i];
                 if (isSpecialChar(currentChar)) {
                     //Not safe
-                    Serial.println(currentChar);
                     int16_t cursorX = gfx->getCursorX();
                     int16_t cursorY = gfx->getCursorY();
-                    Serial.println(currentChar);
                     if (currentChar == *L"á")
                     {
                         gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
@@ -118,8 +118,17 @@ namespace DisplayHandling
                     }
                     else if (currentChar == *L"ö")
                     {
-                        gfx->drawPixel(cursorX + 2, cursorY + 3, WHITE);
-                        gfx->drawPixel(cursorX + 4, cursorY + 3, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 0, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 4, cursorY - 1, WHITE);
+
+                        gfx->drawPixel(cursorX + 7, cursorY - 0, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 8, cursorY - 1, WHITE);
                         gfx->print("o");
                     }
                     else if (currentChar == *L"ő")
@@ -141,8 +150,17 @@ namespace DisplayHandling
 
                     else if (currentChar == *L"ü")
                     {
-                        gfx->drawPixel(cursorX + 2, cursorY + 3, WHITE);
-                        gfx->drawPixel(cursorX + 4, cursorY + 3, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 0, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 4, cursorY - 1, WHITE);
+
+                        gfx->drawPixel(cursorX + 7, cursorY - 0, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 8, cursorY - 1, WHITE);
                         gfx->print("u");
                     }
                     else if (currentChar == *L"ű")
@@ -154,6 +172,89 @@ namespace DisplayHandling
                         gfx->drawLine(cursorX + 6, cursorY - 0, cursorX + 6 + 2, cursorY - 0 - 2, WHITE);
 
                         gfx->print("u");
+                    }
+                    else if (currentChar == *L"Á")
+                    {
+                        gfx->drawLine(cursorX + 4, cursorY - 0 - 3, cursorX + 4 + 2, cursorY - 0 - 2 - 3, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0 - 3, cursorX + 5 + 2, cursorY - 0 - 2 - 3, WHITE);
+                        gfx->print("A");
+                    }
+
+                    else if (currentChar == *L"É")
+                    {
+                        gfx->drawLine(cursorX + 3, cursorY - 0 - 3, cursorX + 3 + 2, cursorY - 0 - 2 - 3, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0 - 3, cursorX + 4 + 2, cursorY - 0 - 2 - 3, WHITE);
+                        gfx->print("E");
+                    }
+                    else if (currentChar == *L"Í")
+                    {
+                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->print("I");
+                    }
+
+                    else if (currentChar == *L"Ó")
+                    {
+                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->print("O");
+                    }
+                    else if (currentChar == *L"Ö")
+                    {
+                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 4, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 4, cursorY - 3, WHITE);
+
+                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 4, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 8, cursorY - 3, WHITE);
+                        gfx->print("O");
+                    }
+                    else if (currentChar == *L"Ő")
+                    {
+                        gfx->drawLine(cursorX + 3, cursorY - 0 - 2, cursorX + 3 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
+
+                        gfx->drawLine(cursorX + 6, cursorY - 0 - 2, cursorX + 6 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->drawLine(cursorX + 7, cursorY - 0 - 2, cursorX + 7 + 2, cursorY - 0 - 2 - 2, WHITE);
+
+                        gfx->print("O");
+                    }
+                    else if (currentChar == *L"Ú")
+                    {
+                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->print("U");
+                    }
+
+                    else if (currentChar == *L"Ü")
+                    {
+                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 3, cursorY - 4, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 4, cursorY - 3, WHITE);
+
+                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 7, cursorY - 4, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 8, cursorY - 3, WHITE);
+                        gfx->print("U");
+                    }
+                    else if (currentChar == *L"Ű")
+                    {
+                        gfx->drawLine(cursorX + 2, cursorY - 0 - 2, cursorX + 2 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->drawLine(cursorX + 3, cursorY - 0 - 2, cursorX + 3 + 2, cursorY - 0 - 2 - 2, WHITE);
+
+                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
+                        gfx->drawLine(cursorX + 6, cursorY - 0 - 2, cursorX + 6 + 2, cursorY - 0 - 2 - 2, WHITE);
+
+                        gfx->print("U");
                     }
                     else
                     {
@@ -411,11 +512,10 @@ namespace DisplayHandling
             createHeadline();
 
             gfx->setCursor(100, 100);
-            //this->displayComplexText("á");
-             this->displayComplexText(L"teszt a á e é i í o ó ö ő u ú ü ű. Teszt vége");
-            // this->displayComplexText("Tésztás");
-            return;
-            this->displayComplexText(L"display text");
+            gfx->println("");
+            this->displayComplexText(L"teszt a á e é i í o ó ö ő u ú ü ű. Teszt vége");
+             
+             //this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
         }
 
         void makeTransition(Screens screenName)
