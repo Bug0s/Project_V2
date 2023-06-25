@@ -62,9 +62,6 @@ namespace DisplayHandling
             this->blockMessages = false;
         }
 
-        wchar_t* textSegmentationForWchar(wchar_t* text) {
-           
-        }
         bool isSpecialChar(wchar_t c)
         {
             const wchar_t *specialChars[] = {L"á", L"é", L"í", L"ó", L"ö", L"ő", L"ú", L"ü", L"ű", L"Á", L"É", L"Í", L"Ó", L"Ö", L"Ő", L"Ú", L"Ü", L"Ű"};
@@ -510,12 +507,10 @@ namespace DisplayHandling
         void drawLoveScreen()
         {
             createHeadline();
-
             gfx->setCursor(100, 100);
             gfx->println("");
-            this->displayComplexText(L"teszt a á e é i í o ó ö ő u ú ü ű. Teszt vége");
-             
-             //this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
+            this->displayComplexText(network.getLoveText());
+            // this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
         }
 
         void makeTransition(Screens screenName)
