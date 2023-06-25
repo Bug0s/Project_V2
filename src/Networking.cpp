@@ -11,21 +11,24 @@
 
 namespace Networking
 {
-    
-    class QueueItem {
+
+    class QueueItem
+    {
     public:
         int id;
         String message;
         String image;
         String time;
-        
-        QueueItem(int id, String message, String image, String time) {
+
+        QueueItem(int id, String message, String image, String time)
+        {
             this->id = id;
             this->message = message;
             this->image = image;
             this->time = time;
         }
-        QueueItem() {
+        QueueItem()
+        {
             this->id = -1;
         }
     };
@@ -34,6 +37,7 @@ namespace Networking
     {
     private:
         String baseUrl = "http://80.99.154.229:5000";
+
     public:
         void connectToWiFi(char *ssid, char *password)
         {
@@ -89,13 +93,13 @@ namespace Networking
             http.end();
         }
 
-        
-
-        int getQueueStatus() {
+        int getQueueStatus()
+        {
             HTTPClient http;
             http.begin("http://80.99.154.229:5000/queueStatus");
             int httpCode = http.GET();
-            if (httpCode == 200) {
+            if (httpCode == 200)
+            {
                 String payload = http.getString();
                 DynamicJsonDocument doc(1024);
                 deserializeJson(doc, payload);
@@ -105,8 +109,9 @@ namespace Networking
                 int count = obj["count"];
                 http.end();
                 return count;
-                
-            } else {
+            }
+            else
+            {
                 Serial.print("Wrong request! CODE: ");
                 Serial.println(httpCode);
             }
@@ -114,14 +119,17 @@ namespace Networking
             return -1;
         }
 
-        QueueItem getLastQueue() {
+        QueueItem getLastQueue()
+        {
             int queueStatus = getQueueStatus();
             bool check = queueStatus > 0;
-            if (check) {
+            if (check)
+            {
                 HTTPClient http;
                 http.begin(baseUrl + "/get/queue/last");
                 int httpCode = http.GET();
-                if (httpCode == 200) {
+                if (httpCode == 200)
+                {
                     String payload = http.getString();
                     DynamicJsonDocument doc(1024);
                     deserializeJson(doc, payload);
@@ -133,7 +141,9 @@ namespace Networking
                     String time = obj["time"];
                     http.end();
                     return QueueItem(id, message, image, time);
-                } else {
+                }
+                else
+                {
                     Serial.print("Wrong request on getLastQueue! CODE: ");
                     Serial.println(httpCode);
                     http.end();
@@ -142,7 +152,8 @@ namespace Networking
             }
             return QueueItem();
         }
-        bool lastPostDisplayed() {
+        bool lastPostDisplayed()
+        {
             HTTPClient http;
             http.begin(baseUrl + "/lastPostDisplayed");
             http.GET();
@@ -152,9 +163,38 @@ namespace Networking
             JsonObject obj = doc.as<JsonObject>();
             http.end();
             return obj["success"];
-            
         }
 
+        
+        wchar_t* getLoveText()
+        {
+            HTTPClient http;
+            http.begin(baseUrl + "/get/loveText");
+            int httpCode = http.GET();
+            if (httpCode == 200)
+            {
+                String payload = http.getString();
+                DynamicJsonDocument doc(512);
+                deserializeJson(doc, payload);
+                JsonObject obj = doc.as<JsonObject>();
+
+                ///The required JSON Data:
+                const String loveTextStr = obj["loveText"];
+                
+                //TODO: Need to prepare predefined love texts, based on enum cases coming from the server.
+                http.end();
+                return L"   Gréta manócskám nagyon \n\n     szeretlek! <3";
+
+                
+            }
+            else
+            {
+                Serial.print("Wrong request! CODE: ");
+                Serial.println(httpCode);
+            }
+            http.end();
+            return L"Connection error!";
+        }
     };
 }
 // #endif
