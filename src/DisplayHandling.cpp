@@ -87,6 +87,7 @@ namespace DisplayHandling
                     //Not safe
                     int16_t cursorX = gfx->getCursorX();
                     int16_t cursorY = gfx->getCursorY();
+                    
                     if (currentChar == *L"á")
                     {
                         gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
@@ -115,17 +116,16 @@ namespace DisplayHandling
                     }
                     else if (currentChar == *L"ö")
                     {
+                        gfx->drawPixel(cursorX + 3, cursorY + 1, WHITE);
                         gfx->drawPixel(cursorX + 3, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 4, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY + 1, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 0, WHITE);
 
+                        gfx->drawPixel(cursorX + 7, cursorY + 1, WHITE);
                         gfx->drawPixel(cursorX + 7, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 8, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY + 1, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 0, WHITE);
+
                         gfx->print("o");
                     }
                     else if (currentChar == *L"ő")
@@ -147,17 +147,15 @@ namespace DisplayHandling
 
                     else if (currentChar == *L"ü")
                     {
+                        gfx->drawPixel(cursorX + 3, cursorY + 1, WHITE);
                         gfx->drawPixel(cursorX + 3, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 4, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY + 1, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 0, WHITE);
 
+                        gfx->drawPixel(cursorX + 7, cursorY + 1, WHITE);
                         gfx->drawPixel(cursorX + 7, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 1, WHITE);
-                        gfx->drawPixel(cursorX + 8, cursorY - 1, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY + 1, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 0, WHITE);
                         gfx->print("u");
                     }
                     else if (currentChar == *L"ű")
@@ -200,15 +198,13 @@ namespace DisplayHandling
                     {
                         gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
                         gfx->drawPixel(cursorX + 3, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 4, WHITE);
                         gfx->drawPixel(cursorX + 2, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 4, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 2, WHITE);
 
                         gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
                         gfx->drawPixel(cursorX + 7, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 4, WHITE);
                         gfx->drawPixel(cursorX + 6, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 8, cursorY - 3, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 2, WHITE);
                         gfx->print("O");
                     }
                     else if (currentChar == *L"Ő")
@@ -232,15 +228,13 @@ namespace DisplayHandling
                     {
                         gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
                         gfx->drawPixel(cursorX + 3, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 4, WHITE);
+                        gfx->drawPixel(cursorX + 2, cursorY - 2, WHITE);
                         gfx->drawPixel(cursorX + 2, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 4, cursorY - 3, WHITE);
 
                         gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
                         gfx->drawPixel(cursorX + 7, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 4, WHITE);
+                        gfx->drawPixel(cursorX + 6, cursorY - 2, WHITE);
                         gfx->drawPixel(cursorX + 6, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 8, cursorY - 3, WHITE);
                         gfx->print("U");
                     }
                     else if (currentChar == *L"Ű")
@@ -312,9 +306,10 @@ namespace DisplayHandling
             setBackgroundLed(100);
             ts.begin();
             // xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
-            drawLoveScreen();
             // It should be HOMESCREEN to drawn!!! / testCase
-            // xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 100000, NULL, 1, TaskHandlers::drawHomeScreen);
+            drawHomeScreen();
+            //xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 800000, NULL, 1, TaskHandlers::drawHomeScreen);
+            vTaskStartScheduler();
         }
 
         // Sets the background led strongness by percentage
@@ -407,45 +402,47 @@ namespace DisplayHandling
         }
         void drawHomeScreen()
         {
-            Box upperLeft = Box(16, 200, 100, 100, YELLOW, gfx);
-            Box lowerLeft = Box(132, 200, 100, 100, YELLOW, gfx);
-            Box upperRight = Box(248, 200, 100, 100, YELLOW, gfx);
-            Box lowerRight = Box(364, 200, 100, 100, YELLOW, gfx);
-            Box buttons[4] = {upperLeft, lowerLeft, upperRight, lowerRight};
+            Box messageButton = Box(16, 200, 100, 100, YELLOW, gfx);
+            Box loveButton = Box(132, 200, 100, 100, YELLOW, gfx);
+            Box historyButton = Box(248, 200, 100, 100, YELLOW, gfx);
+            Box lastButton = Box(364, 200, 100, 100, YELLOW, gfx);
+            Box buttons[4] = {messageButton, loveButton, historyButton, lastButton};
             createHeadline();
             drawJpeg("/backgrounds/homeBackground.jpg", 0, 20);
             for (int i = 0; i <= 3; i++)
             {
                 buttons[i].drawBox();
             }
-            drawJpeg("/buttonIcons/mail3p.jpg", upperLeft.x1, upperLeft.y1);
+            drawJpeg("/buttonIcons/mail3p.jpg", messageButton.x1, messageButton.y1);
+            drawJpeg("/buttonIcons/loveButton.jpg", loveButton.x1, loveButton.y1);
+            drawJpeg("/buttonIcons/historyButton.jpg", historyButton.x1, historyButton.y1);
 
             // TOUCHSENSE
-            auto senseTouch = [&](void *params)
-            {
+            //auto senseTouch = [&](void *params)
+            //{
                 while (true)
                 {
-                    if (senseObject(upperLeft.x1, upperLeft.x2, upperLeft.y1, upperLeft.y2))
+                    if (senseObject(messageButton.x1, messageButton.x2, messageButton.y1, messageButton.y2))
                     {
                         makeTransition(Screens(Downloading));
                         break;
                     }
-                    if (senseObject(lowerLeft.x1, lowerLeft.x2, lowerLeft.y1, lowerLeft.y2))
+                    if (senseObject(loveButton.x1, loveButton.x2, loveButton.y1, loveButton.y2))
                     {
                         makeTransition(Screens(Love));
                         break;
                     }
-                    if (senseObject(upperRight.x1, upperRight.x2, upperRight.y1, upperRight.y2))
+                    if (senseObject(historyButton.x1, historyButton.x2, historyButton.y1, historyButton.y2))
                     {
                         makeTransition(Screens(History));
                         break;
                     }
-                    if (senseObject(lowerRight.x1, lowerRight.x2, lowerRight.y1, lowerRight.y2))
+                    if (senseObject(lastButton.x1, lastButton.x2, lastButton.y1, lastButton.y2))
                     {
                         makeTransition(Screens(Downloading));
                         break;
                     }
-                }
+                //}
             };
         }
 
@@ -458,16 +455,14 @@ namespace DisplayHandling
             gfx->setCursor(120, 75);
             gfx->setTextColor(WHITE);
             gfx->setTextSize(2);
-            gfx->println("Üzenet letöltése..."); // ??
-            // gfx->drawChar(5, 30, 'é', WHITE, BLACK); // á
-            // gfx->drawChar(50, 30, 'á', WHITE, BLACK); // é
-            // gfx->drawChar(150, 30, 'ü', WHITE, BLACK); // ü
+            this->displayComplexText(L"Üzenet letöltése...");
             delay(50);
             this->messageCount = network.getQueueStatus();
             queueItem = network.getLastQueue();
             Serial.println(queueItem.image);
             network.downloadImage(queueItem.image);
-            // makeTransition(Screens(Message));
+            Serial.println("Image downloaded");
+            makeTransition(Screens(Message));
         }
 
         static void taskDrawMessageScreen(void *params)
@@ -501,16 +496,28 @@ namespace DisplayHandling
 
         static void taskDrawLoveScreen(void *params)
         {
+            Serial.println("Love task launched!");
             DisplayHandler dp = DisplayHandler();
             dp.drawLoveScreen();
         }
         void drawLoveScreen()
         {
+            Box homeButton = Box(380, 220, 100, 100, YELLOW, gfx);
+            homeButton.drawBox();
+            this->drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
             createHeadline();
             gfx->setCursor(100, 100);
             gfx->println("");
             this->displayComplexText(network.getLoveText());
-            // this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
+            while(true) {
+                if (senseObject(homeButton)) {
+                    makeTransition(Screens(Home));
+                    break;
+                }
+            }
+
+            //this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
+            //this->displayComplexText(L"teszt O Ö Ő U Ú Ü Ű");
         }
 
         void makeTransition(Screens screenName)
@@ -524,21 +531,31 @@ namespace DisplayHandling
             // reset screen
             resetScreen();
             // draw the new screen
+            for (int i = 0; i < 100;)
+            {
+                setBackgroundLed(++i);
+                delay(1);
+            }
+            setBackgroundLed(100);
+            
             switch (screenName)
             {
             case Home:
                 drawHomeScreen();
-                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 10000, NULL, 1, TaskHandlers::drawHomeScreen);
+                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 8192 , NULL, 1, TaskHandlers::drawHomeScreen);
                 break;
             case History:
                 drawHistoryScreen();
                 break;
             case Love:
                 drawLoveScreen();
-                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 10000, NULL, 1, TaskHandlers::drawLoveScreen);
+                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 8000 , NULL, 1, TaskHandlers::drawLoveScreen);
+                
                 break;
             case Message:
-                xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 10000, NULL, 1, TaskHandlers::drawMessageScreen);
+                drawMessageScreen();
+                //xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 8192 , NULL, 1, TaskHandlers::drawMessageScreen);
+                //vTaskStartScheduler();
                 break;
             case Downloading:
                 drawDownloadScreen();
@@ -551,6 +568,7 @@ namespace DisplayHandling
                 delay(1);
             }
             setBackgroundLed(100);
+            
         }
 
         TouchPoint senseTouch()
@@ -580,6 +598,17 @@ namespace DisplayHandling
             TouchPoint tp = senseTouch();
             // Sense wether the tocuh happened within the coordinates
             if (tp.x > x1 && tp.x < x2 && tp.y > y1 && tp.y < y2)
+            {
+                Serial.println(" got touched!");
+                return true;
+            }
+            return false;
+        }
+        bool senseObject(Box box)
+        {
+            TouchPoint tp = senseTouch();
+            // Sense wether the tocuh happened within the coordinates
+            if (tp.x > box.x1 && tp.x < box.x2 && tp.y > box.y1 && tp.y < box.y2)
             {
                 Serial.println(" got touched!");
                 return true;

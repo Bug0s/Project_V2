@@ -180,12 +180,9 @@ namespace Networking
 
                 ///The required JSON Data:
                 const String loveTextStr = obj["loveText"];
-                
                 //TODO: Need to prepare predefined love texts, based on enum cases coming from the server.
                 http.end();
-                return L"   Gréta manócskám nagyon \n\n     szeretlek! <3";
-
-                
+                return L"   Tészta levéáú nagyon \n\n     hebele <3";
             }
             else
             {

@@ -26,7 +26,6 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(9600);
   network.connectToWiFi("Macko", "Maczkonokia01");
-
   if (!SPIFFS.begin())
   {
     Serial.println("SPIFFS initialisation failed!");
