@@ -308,7 +308,7 @@ namespace DisplayHandling
             // xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
             // It should be HOMESCREEN to drawn!!! / testCase
             drawHomeScreen();
-            //xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 800000, NULL, 1, TaskHandlers::drawHomeScreen);
+            //xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
             vTaskStartScheduler();
         }
 
@@ -413,7 +413,18 @@ namespace DisplayHandling
             {
                 buttons[i].drawBox();
             }
-            drawJpeg("/buttonIcons/mail3p.jpg", messageButton.x1, messageButton.y1);
+            messageCount = network.getQueueStatus();
+            if (messageCount == 0) {
+                this->blockMessages = true;
+            } else if (messageCount == 1) {
+                drawJpeg("/buttonIcons/mail1.jpg", messageButton.x1, messageButton.y1);
+            } else if (messageCount == 2) {
+                drawJpeg("/buttonIcons/mail2.jpg", messageButton.x1, messageButton.y1);
+            } else if (messageCount == 3) {
+                drawJpeg("/buttonIcons/mail3.jpg", messageButton.x1, messageButton.y1);
+            } else if (messageCount > 3) {
+                drawJpeg("/buttonIcons/mail3p.jpg", messageButton.x1, messageButton.y1);
+            }
             drawJpeg("/buttonIcons/loveButton.jpg", loveButton.x1, loveButton.y1);
             drawJpeg("/buttonIcons/historyButton.jpg", historyButton.x1, historyButton.y1);
 
@@ -422,7 +433,7 @@ namespace DisplayHandling
             //{
                 while (true)
                 {
-                    if (senseObject(messageButton.x1, messageButton.x2, messageButton.y1, messageButton.y2))
+                    if (senseObject(messageButton) && !blockMessages)
                     {
                         makeTransition(Screens(Downloading));
                         break;
@@ -461,12 +472,13 @@ namespace DisplayHandling
             queueItem = network.getLastQueue();
             Serial.println(queueItem.image);
             network.downloadImage(queueItem.image);
-            Serial.println("Image downloaded");
             makeTransition(Screens(Message));
         }
 
         static void taskDrawMessageScreen(void *params)
         {
+            Serial.println("taskDrawMessageScreen started");
+            TaskHandler::TaskHandlers::terminateAllTasks(TaskHandlers::drawMessageScreen);
             DisplayHandler dp = DisplayHandler();
             dp.drawMessageScreen();
         }
@@ -475,13 +487,29 @@ namespace DisplayHandling
             createHeadline();
 
             // gfx->fillRect(50, 40, 380, 100, BLUE);
+            Box homeButton = Box(380, 220, 100, 100, YELLOW, gfx);
+            homeButton.drawBox();
+            drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
 
-            // BUTTONS
-            gfx->drawRect(420, 240, 60, 80, YELLOW); // may should be ROUNDED?
-            gfx->drawFastHLine(420, 280, 60, YELLOW);
-
+            Box nextButton = Box(380, 120, 100, 100, YELLOW, gfx);
+            if (--messageCount > 0) {
+                nextButton.drawBox();
+                drawJpeg("/buttonIcons/arrowOn.jpg", nextButton.x1, nextButton.y1);
+            } else {
+                nextButton.drawBox();
+                drawJpeg("/buttonIcons/arrowOff.jpg", nextButton.x1, nextButton.y1);
+            }
+            gfx->drawFastHLine(380, 220, 100, BLACK);
             drawJpeg(localImage, 40, 40);
             network.lastPostDisplayed();
+            while (true) {
+                if (senseObject(homeButton)) {
+                    makeTransition(Screens(Home));
+                }
+                if (senseObject(nextButton) && messageCount > 0) {
+                    makeTransition(Screens(Downloading));
+                }
+            }
         }
 
         static void taskDrawHistoryScreen(void *params)
@@ -537,25 +565,28 @@ namespace DisplayHandling
                 delay(1);
             }
             setBackgroundLed(100);
+
+            TaskHandlers th = TaskHandler::TaskHandlers();
             
             switch (screenName)
             {
             case Home:
                 drawHomeScreen();
-                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 8192 , NULL, 1, TaskHandlers::drawHomeScreen);
+                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 1200000 , NULL, 1, TaskHandlers::drawHomeScreen);
+                th.terminateAllTasks(th.drawHomeScreen);
                 break;
             case History:
                 drawHistoryScreen();
                 break;
             case Love:
                 drawLoveScreen();
-                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 8000 , NULL, 1, TaskHandlers::drawLoveScreen);
-                
+                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 1200000 , NULL, 1, TaskHandlers::drawLoveScreen);
+                th.terminateAllTasks(th.drawLoveScreen);
                 break;
             case Message:
                 drawMessageScreen();
-                //xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 8192 , NULL, 1, TaskHandlers::drawMessageScreen);
-                //vTaskStartScheduler();
+                xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawMessageScreen);
+                th.terminateAllTasks(th.drawMessageScreen);
                 break;
             case Downloading:
                 drawDownloadScreen();
@@ -568,6 +599,7 @@ namespace DisplayHandling
                 delay(1);
             }
             setBackgroundLed(100);
+            while(1) {}
             
         }
 
@@ -599,7 +631,6 @@ namespace DisplayHandling
             // Sense wether the tocuh happened within the coordinates
             if (tp.x > x1 && tp.x < x2 && tp.y > y1 && tp.y < y2)
             {
-                Serial.println(" got touched!");
                 return true;
             }
             return false;
@@ -610,7 +641,6 @@ namespace DisplayHandling
             // Sense wether the tocuh happened within the coordinates
             if (tp.x > box.x1 && tp.x < box.x2 && tp.y > box.y1 && tp.y < box.y2)
             {
-                Serial.println(" got touched!");
                 return true;
             }
             return false;

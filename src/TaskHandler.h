@@ -11,6 +11,6 @@ namespace TaskHandler
 
         static TaskHandle_t* allTasks[4];
 
-        static void terminateAllTasks();
+        static void terminateAllTasks(TaskHandle_t* except);
     };
 } // namespace TaskHandler
