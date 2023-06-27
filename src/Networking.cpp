@@ -1,6 +1,6 @@
 #pragma once
-//#ifndef NETWORKING_CPP
-//#define NETWORKING_CPP
+// #ifndef NETWORKING_CPP
+// #define NETWORKING_CPP
 #include "Arduino.h"
 #include "WiFi.h"
 #include "SPI.h"
@@ -8,8 +8,6 @@
 #include "SPIFFS.h"
 #include "HTTPClient.h"
 #include "ArduinoJson.h"
-#include "DisplayHandling.cpp"
-
 
 namespace Networking
 {
@@ -70,7 +68,7 @@ namespace Networking
                 File file = SPIFFS.open("/image.jpg", FILE_WRITE);
                 if (!file)
                 {
-                    //DisplayHandling::DisplayHandler::throwError(L"Nem sikerült letölteni a képet.\nPróbáld újra!");
+                    throw std::runtime_error("Download not success");
                     return;
                 }
 
@@ -149,6 +147,7 @@ namespace Networking
                     Serial.print("Wrong request on getLastQueue! CODE: ");
                     Serial.println(httpCode);
                     http.end();
+                    throw std::runtime_error("Get last queue problem");
                     return QueueItem();
                 }
             }
@@ -196,4 +195,4 @@ namespace Networking
         }
     };
 }
-//#endif
+// #endif
