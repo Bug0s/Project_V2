@@ -63,6 +63,9 @@ namespace DisplayHandling
             this->blockMessages = false;
         }
 
+        wchar_t* segmentText(wchar_t* text, int lineStart) {
+            //Write a function which gets a text then replaces the \n (line breaks) with white spaces, based on the parameter. Then returns the formed wchar_t* text
+         }
         bool isSpecialChar(wchar_t c)
         {
             const wchar_t *specialChars[] = {L"á", L"é", L"í", L"ó", L"ö", L"ő", L"ú", L"ü", L"ű", L"Á", L"É", L"Í", L"Ó", L"Ö", L"Ő", L"Ú", L"Ü", L"Ű"};
@@ -330,7 +333,12 @@ namespace DisplayHandling
         // Downloads a JPG and displays it to the TFT
         void downloadAndDisplayImage(char *link, int xpos, int ypos)
         {
-            Networking::Network().downloadImage(link);
+            try {
+                network.downloadImage(link);
+            } catch(const std::exception &err) {
+                onErrorThrown(L"Nem sikerült letölteni a képet.\nPróbáld újra!");
+                return;
+            }
             this->drawJpeg("/image.jpg", xpos, ypos);
         }
 
@@ -406,7 +414,6 @@ namespace DisplayHandling
         }
         void drawHomeScreen()
         {
-
             Box messageButton = Box(45, 200, 100, 100, YELLOW, gfx);
             Box loveButton = Box(190, 200, 100, 100, YELLOW, gfx);
             Box historyButton = Box(335, 200, 100, 100, YELLOW, gfx);
@@ -474,10 +481,13 @@ namespace DisplayHandling
             gfx->setTextSize(2);
             this->displayComplexText(L"Üzenet letöltése...");
             delay(50);
-            this->messageCount = network.getQueueStatus();
+            try {
+            messageCount = network.getQueueStatus();
             queueItem = network.getLastQueue();
-            Serial.println(queueItem.image);
             network.downloadImage(queueItem.image);
+            } catch(std::exception &err) {
+                onErrorThrown(L"Hiba a kép letöltése közben. \nPróbáld újra Baby!");
+            }
             makeTransition(Screens(Message));
         }
 
@@ -614,19 +624,18 @@ namespace DisplayHandling
             }
             setBackgroundLed(100);
         }
-        static void throwError(wchar_t* errorMessage) {
-            DisplayHandler dp = DisplayHandler();
-            Box background = Box(90, 50, 300, 100, BLACK, dp.gfx);
+        void onErrorThrown(wchar_t* errorMessage) {
+            Box background = Box(90, 50, 300, 100, BLACK, gfx);
             background.drawBox();
-            dp.gfx->fillRect(90, 50, 300, 100, BLACK);
-            dp.gfx->drawRect(90, 50, 300, 100, RED);
+            gfx->fillRect(90, 50, 300, 100, BLACK);
+            gfx->drawRect(90, 50, 300, 100, RED);
 
-            dp.gfx->setCursor(100, 55);
-            dp.displayComplexText(errorMessage);
-            dp.drawJpeg("/buttonIcons/homeButtonSmall.jpg", background.x1, background.y1);
+            gfx->setCursor(100, 55);
+            displayComplexText(errorMessage);
+            drawJpeg("/buttonIcons/homeButtonSmall.jpg", background.x1, background.y1);
             while (true) {
-                if (dp.senseObject(background)) {
-                    dp.drawHomeScreen();
+                if (senseObject(background)) {
+                    drawHomeScreen();
                     return;
                 }
             }
