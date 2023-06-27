@@ -1,6 +1,6 @@
 #pragma once
-// #ifndef NETWORKING_CPP
-// #define NETWORKING_CPP
+//#ifndef NETWORKING_CPP
+//#define NETWORKING_CPP
 #include "Arduino.h"
 #include "WiFi.h"
 #include "SPI.h"
@@ -8,6 +8,8 @@
 #include "SPIFFS.h"
 #include "HTTPClient.h"
 #include "ArduinoJson.h"
+#include "DisplayHandling.cpp"
+
 
 namespace Networking
 {
@@ -68,7 +70,7 @@ namespace Networking
                 File file = SPIFFS.open("/image.jpg", FILE_WRITE);
                 if (!file)
                 {
-                    Serial.println("Failed to open file for writing");
+                    //DisplayHandling::DisplayHandler::throwError(L"Nem sikerült letölteni a képet.\nPróbáld újra!");
                     return;
                 }
 
@@ -194,4 +196,4 @@ namespace Networking
         }
     };
 }
-// #endif
+//#endif

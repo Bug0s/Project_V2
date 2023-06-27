@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DISPLAYHANDLING_CPP
 #define DISPLAYHANDLING_CPP
 #include "Arduino.h"
@@ -78,16 +79,17 @@ namespace DisplayHandling
             return false;
         }
 
-        void displayComplexText(wchar_t* text)
+        void displayComplexText(wchar_t *text)
         {
             for (int i = 0; i < wcslen(text); i++)
             {
                 wchar_t currentChar = text[i];
-                if (isSpecialChar(currentChar)) {
-                    //Not safe
+                if (isSpecialChar(currentChar))
+                {
+                    // Not safe
                     int16_t cursorX = gfx->getCursorX();
                     int16_t cursorY = gfx->getCursorY();
-                    
+
                     if (currentChar == *L"á")
                     {
                         gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
@@ -251,8 +253,10 @@ namespace DisplayHandling
                     {
                         Serial.println("UNIDENTIFIED CHAR!");
                     }
-                } else {
-                    //safe
+                }
+                else
+                {
+                    // safe
                     gfx->print((char)text[i]);
                     continue;
                 }
@@ -308,7 +312,7 @@ namespace DisplayHandling
             // xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
             // It should be HOMESCREEN to drawn!!! / testCase
             drawHomeScreen();
-            //xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
+            // xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
             vTaskStartScheduler();
         }
 
@@ -402,58 +406,60 @@ namespace DisplayHandling
         }
         void drawHomeScreen()
         {
-            Box messageButton = Box(16, 200, 100, 100, YELLOW, gfx);
-            Box loveButton = Box(132, 200, 100, 100, YELLOW, gfx);
-            Box historyButton = Box(248, 200, 100, 100, YELLOW, gfx);
-            Box lastButton = Box(364, 200, 100, 100, YELLOW, gfx);
-            Box buttons[4] = {messageButton, loveButton, historyButton, lastButton};
+
+            Box messageButton = Box(45, 200, 100, 100, YELLOW, gfx);
+            Box loveButton = Box(190, 200, 100, 100, YELLOW, gfx);
+            Box historyButton = Box(335, 200, 100, 100, YELLOW, gfx);
+
+            Box buttons[3] = {messageButton, loveButton, historyButton};
             createHeadline();
             drawJpeg("/backgrounds/homeBackground.jpg", 0, 20);
-            for (int i = 0; i <= 3; i++)
+            for (int i = 0; i < 3; i++)
+
             {
                 buttons[i].drawBox();
             }
             messageCount = network.getQueueStatus();
-            if (messageCount == 0) {
+            if (messageCount == 0)
+            {
                 this->blockMessages = true;
-            } else if (messageCount == 1) {
+            }
+            else if (messageCount == 1)
+            {
                 drawJpeg("/buttonIcons/mail1.jpg", messageButton.x1, messageButton.y1);
-            } else if (messageCount == 2) {
+            }
+            else if (messageCount == 2)
+            {
                 drawJpeg("/buttonIcons/mail2.jpg", messageButton.x1, messageButton.y1);
-            } else if (messageCount == 3) {
+            }
+            else if (messageCount == 3)
+            {
                 drawJpeg("/buttonIcons/mail3.jpg", messageButton.x1, messageButton.y1);
-            } else if (messageCount > 3) {
+            }
+            else if (messageCount > 3)
+            {
                 drawJpeg("/buttonIcons/mail3p.jpg", messageButton.x1, messageButton.y1);
             }
             drawJpeg("/buttonIcons/loveButton.jpg", loveButton.x1, loveButton.y1);
             drawJpeg("/buttonIcons/historyButton.jpg", historyButton.x1, historyButton.y1);
 
-            // TOUCHSENSE
-            //auto senseTouch = [&](void *params)
-            //{
-                while (true)
+            while (true)
+            {
+                if (senseObject(messageButton) && !blockMessages)
                 {
-                    if (senseObject(messageButton) && !blockMessages)
-                    {
-                        makeTransition(Screens(Downloading));
-                        break;
-                    }
-                    if (senseObject(loveButton.x1, loveButton.x2, loveButton.y1, loveButton.y2))
-                    {
-                        makeTransition(Screens(Love));
-                        break;
-                    }
-                    if (senseObject(historyButton.x1, historyButton.x2, historyButton.y1, historyButton.y2))
-                    {
-                        makeTransition(Screens(History));
-                        break;
-                    }
-                    if (senseObject(lastButton.x1, lastButton.x2, lastButton.y1, lastButton.y2))
-                    {
-                        makeTransition(Screens(Downloading));
-                        break;
-                    }
-                //}
+                    makeTransition(Screens(Downloading));
+                    break;
+                }
+                if (senseObject(loveButton))
+                {
+                    makeTransition(Screens(Love));
+                    break;
+                }
+                if (senseObject(historyButton))
+                {
+                    makeTransition(Screens(History));
+                    break;
+                }
             };
         }
 
@@ -461,7 +467,7 @@ namespace DisplayHandling
         {
             createHeadline();
             setBackgroundLed(100);
-            gfx->drawRect(100, 60, 200, 280, RED);
+            gfx->drawRect(100, 60, 300, 80, RED);
 
             gfx->setCursor(120, 75);
             gfx->setTextColor(WHITE);
@@ -492,21 +498,27 @@ namespace DisplayHandling
             drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
 
             Box nextButton = Box(380, 120, 100, 100, YELLOW, gfx);
-            if (--messageCount > 0) {
+            if (--messageCount > 0)
+            {
                 nextButton.drawBox();
                 drawJpeg("/buttonIcons/arrowOn.jpg", nextButton.x1, nextButton.y1);
-            } else {
+            }
+            else
+            {
                 nextButton.drawBox();
                 drawJpeg("/buttonIcons/arrowOff.jpg", nextButton.x1, nextButton.y1);
             }
             gfx->drawFastHLine(380, 220, 100, BLACK);
             drawJpeg(localImage, 40, 40);
             network.lastPostDisplayed();
-            while (true) {
-                if (senseObject(homeButton)) {
+            while (true)
+            {
+                if (senseObject(homeButton))
+                {
                     makeTransition(Screens(Home));
                 }
-                if (senseObject(nextButton) && messageCount > 0) {
+                if (senseObject(nextButton) && messageCount > 0)
+                {
                     makeTransition(Screens(Downloading));
                 }
             }
@@ -537,15 +549,17 @@ namespace DisplayHandling
             gfx->setCursor(100, 100);
             gfx->println("");
             this->displayComplexText(network.getLoveText());
-            while(true) {
-                if (senseObject(homeButton)) {
+            while (true)
+            {
+                if (senseObject(homeButton))
+                {
                     makeTransition(Screens(Home));
                     break;
                 }
             }
 
-            //this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
-            //this->displayComplexText(L"teszt O Ö Ő U Ú Ü Ű");
+            // this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
+            // this->displayComplexText(L"teszt O Ö Ő U Ú Ü Ű");
         }
 
         void makeTransition(Screens screenName)
@@ -567,12 +581,12 @@ namespace DisplayHandling
             setBackgroundLed(100);
 
             TaskHandlers th = TaskHandler::TaskHandlers();
-            
+
             switch (screenName)
             {
             case Home:
                 drawHomeScreen();
-                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 1200000 , NULL, 1, TaskHandlers::drawHomeScreen);
+                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
                 th.terminateAllTasks(th.drawHomeScreen);
                 break;
             case History:
@@ -580,7 +594,7 @@ namespace DisplayHandling
                 break;
             case Love:
                 drawLoveScreen();
-                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 1200000 , NULL, 1, TaskHandlers::drawLoveScreen);
+                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawLoveScreen);
                 th.terminateAllTasks(th.drawLoveScreen);
                 break;
             case Message:
@@ -599,8 +613,25 @@ namespace DisplayHandling
                 delay(1);
             }
             setBackgroundLed(100);
-            while(1) {}
-            
+        }
+        static void throwError(wchar_t* errorMessage) {
+            DisplayHandler dp = DisplayHandler();
+            Box background = Box(90, 50, 300, 100, BLACK, dp.gfx);
+            background.drawBox();
+            dp.gfx->fillRect(90, 50, 300, 100, BLACK);
+            dp.gfx->drawRect(90, 50, 300, 100, RED);
+
+            dp.gfx->setCursor(100, 55);
+            dp.displayComplexText(errorMessage);
+            dp.drawJpeg("/buttonIcons/homeButtonSmall.jpg", background.x1, background.y1);
+            while (true) {
+                if (dp.senseObject(background)) {
+                    dp.drawHomeScreen();
+                    return;
+                }
+            }
+
+
         }
 
         TouchPoint senseTouch()
@@ -625,6 +656,7 @@ namespace DisplayHandling
             }
             return TouchPoint(false);
         }
+
         bool senseObject(int x1, int x2, int y1, int y2)
         {
             TouchPoint tp = senseTouch();
