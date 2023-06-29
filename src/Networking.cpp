@@ -68,7 +68,7 @@ namespace Networking
                 File file = SPIFFS.open("/image.jpg", FILE_WRITE);
                 if (!file)
                 {
-                    throw std::runtime_error("Download not success");
+                    throw std::runtime_error("Download not success. FileWriteError");
                     return;
                 }
 
@@ -89,6 +89,9 @@ namespace Networking
             else
             {
                 Serial.printf("HTTP GET failed, error code: %d\n", httpCode);
+                http.end();
+                throw std::runtime_error("Download not success. HTTPError");
+                return;
             }
             http.end();
         }
@@ -110,13 +113,8 @@ namespace Networking
                 http.end();
                 return count;
             }
-            else
-            {
-                Serial.print("Wrong request! CODE: ");
-                Serial.println(httpCode);
-            }
             http.end();
-            return -1;
+            throw std::runtime_error("Problem with the queue status download.");
         }
 
         QueueItem getLastQueue()
@@ -148,25 +146,25 @@ namespace Networking
                     Serial.println(httpCode);
                     http.end();
                     throw std::runtime_error("Get last queue problem");
-                    return QueueItem();
                 }
             }
-            return QueueItem();
+            throw std::runtime_error("There is no queue item to download.");
         }
         bool lastPostDisplayed()
         {
             HTTPClient http;
             http.begin(baseUrl + "/lastPostDisplayed");
-            http.GET();
-            String payload = http.getString();
-            DynamicJsonDocument doc(128);
-            deserializeJson(doc, payload);
-            JsonObject obj = doc.as<JsonObject>();
-            http.end();
-            return obj["success"];
+            int httpCode = http.GET();
+            if (httpCode) {
+                String payload = http.getString();
+                DynamicJsonDocument doc(128);
+                deserializeJson(doc, payload);
+                JsonObject obj = doc.as<JsonObject>();
+                http.end();
+                return obj["success"];
+            } else throw std::runtime_error("Problem with lastPostDisplayed.");
         }
 
-        
         wchar_t* getLoveText()
         {
             HTTPClient http;
@@ -179,16 +177,16 @@ namespace Networking
                 deserializeJson(doc, payload);
                 JsonObject obj = doc.as<JsonObject>();
 
-                ///The required JSON Data:
+                /// The required JSON Data:
                 const String loveTextStr = obj["loveText"];
-                //TODO: Need to prepare predefined love texts, based on enum cases coming from the server.
+                // TODO: Need to prepare predefined love texts, based on enum cases coming from the server.
                 http.end();
-                return L"   Tészta levéáú nagyon \n\n     hebele <3";
+                return L"Tészta levéáú nagyon\nhebele <3";
             }
             else
             {
-                Serial.print("Wrong request! CODE: ");
                 Serial.println(httpCode);
+                throw std::runtime_error("Problem with getLoveText");
             }
             http.end();
             return L"Connection error!";

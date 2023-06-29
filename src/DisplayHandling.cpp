@@ -63,9 +63,50 @@ namespace DisplayHandling
             this->blockMessages = false;
         }
 
-        wchar_t* segmentText(wchar_t* text, int lineStart) {
-            //Write a function which gets a text then replaces the \n (line breaks) with white spaces, based on the parameter. Then returns the formed wchar_t* text
-         }
+        wchar_t *segmentText(wchar_t *text, int lineStart)
+        {
+            int textLength = wcslen(text);
+            int numLineBreaks = 0;
+
+            // Count the number of line breaks in the text
+            for (int i = 0; i < textLength; i++)
+            {
+                if (text[i] == '\n')
+                {
+                    numLineBreaks++;
+                }
+            }
+
+            // Calculate the new text length with additional line breaks and whitespaces
+            int newTextLength = textLength + (numLineBreaks * 2 + 1) * lineStart;
+
+            // Create a new character array to store the segmented text
+            wchar_t *segmentedText = new wchar_t[newTextLength + 1];
+
+            int j = 0;
+            for (int i = 0; i < textLength; i++)
+            {
+                segmentedText[j++] = text[i];
+                if (text[i] == '\n')
+                {
+                    // Add the specified number of whitespaces after a line break
+                    for (int k = 0; k < lineStart; k++)
+                    {
+                        segmentedText[j++] = L' ';
+                    }
+                    segmentedText[j++] = L'\n'; // Add an additional line break
+                    for (int k = 0; k < lineStart; k++)
+                    {
+                        segmentedText[j++] = L' ';
+                    }
+                }
+            }
+
+            // Add a null-terminating character at the end of the segmented text
+            segmentedText[j] = L'\0';
+
+            return segmentedText;
+        }
         bool isSpecialChar(wchar_t c)
         {
             const wchar_t *specialChars[] = {L"á", L"é", L"í", L"ó", L"ö", L"ő", L"ú", L"ü", L"ű", L"Á", L"É", L"Í", L"Ó", L"Ö", L"Ő", L"Ú", L"Ü", L"Ű"};
@@ -316,7 +357,9 @@ namespace DisplayHandling
             // It should be HOMESCREEN to drawn!!! / testCase
             drawHomeScreen();
             // xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
-            vTaskStartScheduler();
+            //vTaskStartScheduler();
+
+            
         }
 
         // Sets the background led strongness by percentage
@@ -333,9 +376,12 @@ namespace DisplayHandling
         // Downloads a JPG and displays it to the TFT
         void downloadAndDisplayImage(char *link, int xpos, int ypos)
         {
-            try {
+            try
+            {
                 network.downloadImage(link);
-            } catch(const std::exception &err) {
+            }
+            catch (const std::exception &err)
+            {
                 onErrorThrown(L"Nem sikerült letölteni a képet.\nPróbáld újra!");
                 return;
             }
@@ -449,6 +495,10 @@ namespace DisplayHandling
             }
             drawJpeg("/buttonIcons/loveButton.jpg", loveButton.x1, loveButton.y1);
             drawJpeg("/buttonIcons/historyButton.jpg", historyButton.x1, historyButton.y1);
+            wchar_t *testText = L"Ez egy teljesen\nmintájááraű készült tesztelés.";
+            wchar_t *segmented = segmentText(testText, 6);
+            gfx->setCursor(130, 65);
+            this->displayComplexText(segmented);
 
             while (true)
             {
@@ -481,12 +531,15 @@ namespace DisplayHandling
             gfx->setTextSize(2);
             this->displayComplexText(L"Üzenet letöltése...");
             delay(50);
-            try {
-            messageCount = network.getQueueStatus();
-            queueItem = network.getLastQueue();
-            network.downloadImage(queueItem.image);
-            } catch(std::exception &err) {
-                onErrorThrown(L"Hiba a kép letöltése közben. \nPróbáld újra Baby!");
+            try
+            {
+                messageCount = network.getQueueStatus();
+                queueItem = network.getLastQueue();
+                network.downloadImage(queueItem.image);
+            }
+            catch (std::exception &err)
+            {
+                onErrorThrown(L"Hiba a kép letöltése közben.\nPróbáld újra Baby!");
             }
             makeTransition(Screens(Message));
         }
@@ -526,10 +579,12 @@ namespace DisplayHandling
                 if (senseObject(homeButton))
                 {
                     makeTransition(Screens(Home));
+                    break;
                 }
                 if (senseObject(nextButton) && messageCount > 0)
                 {
                     makeTransition(Screens(Downloading));
+                    break;
                 }
             }
         }
@@ -558,7 +613,7 @@ namespace DisplayHandling
             createHeadline();
             gfx->setCursor(100, 100);
             gfx->println("");
-            this->displayComplexText(network.getLoveText());
+            this->displayComplexText(segmentText(network.getLoveText(), 8));
             while (true)
             {
                 if (senseObject(homeButton))
@@ -624,23 +679,25 @@ namespace DisplayHandling
             }
             setBackgroundLed(100);
         }
-        void onErrorThrown(wchar_t* errorMessage) {
-            Box background = Box(90, 50, 300, 100, BLACK, gfx);
+        void onErrorThrown(wchar_t *errorMessage)
+        {
+            Box background = Box(90, 50, 300, 160, BLACK, gfx);
+            Box homeButton = Box((background.x2 - background.x1) / 2 + 90 - 25, background.y2 - 50 - 20, 50, 50, YELLOW, gfx);
             background.drawBox();
-            gfx->fillRect(90, 50, 300, 100, BLACK);
-            gfx->drawRect(90, 50, 300, 100, RED);
+            gfx->fillRect(90, 50, 300, 160, BLACK);
+            gfx->drawRect(90, 50, 300, 160, RED);
 
             gfx->setCursor(100, 55);
-            displayComplexText(errorMessage);
-            drawJpeg("/buttonIcons/homeButtonSmall.jpg", background.x1, background.y1);
-            while (true) {
-                if (senseObject(background)) {
+            displayComplexText(segmentText(errorMessage, 8));
+            drawJpeg("/alert/homeButtonSmall.jpg", (background.x2 - background.x1) / 2 + 90 - 25, background.y2 - 50 - 20);
+            while (true)
+            {
+                if (senseObject(homeButton))
+                {
                     drawHomeScreen();
                     return;
                 }
             }
-
-
         }
 
         TouchPoint senseTouch()
