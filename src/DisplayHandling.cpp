@@ -9,11 +9,13 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "TaskHandler.h"
+#include "LedDriver.cpp"
 
 
 using namespace DataHandling;
 using namespace Networking;
 using namespace TaskHandler;
+using namespace LedDriver;
 
 namespace DisplayHandling
 {
@@ -362,11 +364,10 @@ namespace DisplayHandling
         ChestState isChestClosed()
         {
             int doorPin = 13;
-            return open;
             if (digitalRead(doorPin)) {
-                return open;
-            } else {
                 return closed;
+            } else {
+                return open;
             }
         }
         
@@ -405,9 +406,11 @@ namespace DisplayHandling
                     {
                         checkWifi();
                         // Led villogtatás
+                        LedDriverClass().ledStart();
                         if (isChestClosed() == open)
                         {
                             lastKnownChestState = open;
+                            Serial.println("Exited");
                             return;
                         }
                     }
