@@ -10,6 +10,7 @@
 #include "freertos/task.h"
 #include "TaskHandler.h"
 
+
 using namespace DataHandling;
 using namespace Networking;
 using namespace TaskHandler;
@@ -343,7 +344,112 @@ namespace DisplayHandling
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
         XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
 
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        enum ChestState
+        {
+            closed,
+            open
+        };
+        ChestState isChestClosed()
+        {
+            int doorPin = 13;
+            return open;
+            if (digitalRead(doorPin)) {
+                return open;
+            } else {
+                return closed;
+            }
+        }
+        
+        ChestState lastKnownChestState = ChestState::open;
+        bool wiFiGotConnected = true;
+
+        void checkWifi() {
+            if (WiFi.status() != WL_CONNECTED) {
+                wiFiGotConnected = false;
+                WiFi.begin("Macko", "Maczkonokia01");
+                this->onTemporaryError(L"Elment a WiFi jel.\n\nVárj egy pillanatot\namíg újra csatlakozom...");
+                delay(2000);
+                while(WiFi.status() != WL_CONNECTED) {
+
+                }
+                makeTransition(Home);
+                return;
+            }
+        }
+
+        void lookForNewMessages()
+        {
+            while (true)
+            {
+                checkWifi();
+                int queueCount = network.getQueueStatus();
+                //If the chest got opened
+                if (isChestClosed() == open) {
+                    lastKnownChestState = open;
+                    return;
+                }
+                //If there is an unread message
+                if (queueCount > 0)
+                {
+                    while (true)
+                    {
+                        checkWifi();
+                        // Led villogtatás
+                        if (isChestClosed() == open)
+                        {
+                            lastKnownChestState = open;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        void onChestClosed()
+        {
+            this->setBackgroundLed(0);
+            // The program execution continues when found new messages!
+            lookForNewMessages();
+            this->makeTransition(Home);
+            this->setBackgroundLed(100);
+        }
+
+    public:
+
+        void watchAlways(bool withCheckWifi = true)
+        {
+            if (this->isChestClosed() == closed && lastKnownChestState == open)
+            {
+                lastKnownChestState == closed;
+                onChestClosed();
+            }
+
+            if (withCheckWifi) checkWifi();
+        }
+
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+
         int messageCount;
+        
         void initTFT()
         {
             gfx->begin();
@@ -502,6 +608,8 @@ namespace DisplayHandling
 
             while (true)
             {
+                watchAlways();
+
                 if (senseObject(messageButton) && !blockMessages)
                 {
                     makeTransition(Screens(Downloading));
@@ -576,6 +684,8 @@ namespace DisplayHandling
             network.lastPostDisplayed();
             while (true)
             {
+                watchAlways();
+
                 if (senseObject(homeButton))
                 {
                     makeTransition(Screens(Home));
@@ -616,6 +726,7 @@ namespace DisplayHandling
             this->displayComplexText(segmentText(network.getLoveText(), 8));
             while (true)
             {
+                watchAlways(false);
                 if (senseObject(homeButton))
                 {
                     makeTransition(Screens(Home));
@@ -692,12 +803,23 @@ namespace DisplayHandling
             drawJpeg("/alert/homeButtonSmall.jpg", (background.x2 - background.x1) / 2 + 90 - 25, background.y2 - 50 - 20);
             while (true)
             {
+                watchAlways(false);
                 if (senseObject(homeButton))
                 {
                     drawHomeScreen();
                     return;
                 }
             }
+        }
+        void onTemporaryError(wchar_t* errorMessage) {
+            Box background = Box(90, 50, 300, 160, BLACK, gfx);
+            Box homeButton = Box((background.x2 - background.x1) / 2 + 90 - 25, background.y2 - 50 - 20, 50, 50, YELLOW, gfx);
+            background.drawBox();
+            gfx->fillRect(90, 50, 300, 160, BLACK);
+            gfx->drawRect(90, 50, 300, 160, RED);
+
+            gfx->setCursor(100, 55);
+            displayComplexText(segmentText(errorMessage, 8));
         }
 
         TouchPoint senseTouch()
@@ -745,4 +867,6 @@ namespace DisplayHandling
         }
     };
 }
+
+
 #endif

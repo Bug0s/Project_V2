@@ -1,3 +1,4 @@
+#pragma once
 #include <Arduino.h>
 #include "SPI.h"
 #include "Networking.cpp"
@@ -19,6 +20,7 @@ Network network = Network();
 DisplayHandler displayHandler = DisplayHandler();
 JpegHandler jpegHandler = JpegHandler();
 
+
 // Background thread init
 
 void setup()
@@ -32,6 +34,8 @@ void setup()
     while (1)
       yield(); // Stay here twiddling thumbs waiting
   }
+  
+  
   displayHandler.initTFT();
 
   // network.donwloadImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg");
