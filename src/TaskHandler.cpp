@@ -7,12 +7,15 @@ TaskHandle_t* TaskHandler::TaskHandlers::drawHomeScreen = nullptr;
 TaskHandle_t* TaskHandler::TaskHandlers::drawMessageScreen = nullptr;
 TaskHandle_t* TaskHandler::TaskHandlers::drawLoveScreen = nullptr;
 TaskHandle_t* TaskHandler::TaskHandlers::drawHistoryScreen = nullptr;
+TaskHandle_t* TaskHandler::TaskHandlers::ledDriver = nullptr;
+
 
 TaskHandle_t* TaskHandler::TaskHandlers::allTasks[] = {
     drawHomeScreen,
     drawMessageScreen,
     drawLoveScreen,
     drawHistoryScreen,
+    ledDriver
 };
 
 void TaskHandler::TaskHandlers::terminateAllTasks(TaskHandle_t* except)

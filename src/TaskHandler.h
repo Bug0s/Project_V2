@@ -8,8 +8,9 @@ namespace TaskHandler
         static TaskHandle_t* drawMessageScreen;
         static TaskHandle_t* drawLoveScreen;
         static TaskHandle_t* drawHistoryScreen;
+        static TaskHandle_t* ledDriver;
 
-        static TaskHandle_t* allTasks[4];
+        static TaskHandle_t* allTasks[5];
 
         static void terminateAllTasks(TaskHandle_t* except);
     };
