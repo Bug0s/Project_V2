@@ -35,12 +35,6 @@ void setup()
       yield(); // Stay here twiddling thumbs waiting
   }
   LedDriverClass().ledSetup();
-  pinMode(35, INPUT);
-  digitalWrite(34, HIGH);
-  delay(1000);
-  Serial.println("RESULT: ");
-  Serial.println(digitalRead(35));
-  
   
   displayHandler.initTFT();
 

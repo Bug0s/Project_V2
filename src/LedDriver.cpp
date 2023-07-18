@@ -351,24 +351,14 @@ namespace LedDriver
 
     void ledSetup()
     {
-      Serial.println("Setup start");
       pinMode(Q1, OUTPUT);
-      delay(1000); Serial.println("Q1 done");
       pinMode(Q2, OUTPUT);
-      delay(1000); Serial.println("Q2 done");
       pinMode(Q3, OUTPUT);
-      delay(1000); Serial.println("Q3 done");
       pinMode(Q4, OUTPUT);
-      delay(1000); Serial.println("Q4 done");
       pinMode(Q5, OUTPUT);
-      delay(1000); Serial.println("Q5 done");
       pinMode(Q6, OUTPUT);
-      delay(1000); Serial.println("Q6 done");
       pinMode(Q7, OUTPUT);
-      delay(1000); Serial.println("Q7 done");
       pinMode(Q8, OUTPUT);
-      delay(1000); Serial.println("Q8 done");
-      Serial.println("Setup end");
 
       digitalWrite(Q1, HIGH);
       digitalWrite(Q2, HIGH);
@@ -382,10 +372,22 @@ namespace LedDriver
       delay(1000);
     }
 
+    bool isFirstRun = true;
+
+    static void ledStartTask(void* params) {
+      LedDriverClass ld = LedDriverClass();
+      if (ld.isFirstRun) {
+        vTaskSuspend(NULL);
+      }
+      ld.isFirstRun = false;
+      
+      ld.ledStart();
+      //vTaskSuspend(NULL);
+
+      
+    }
     void ledStart()
     {
-      while (true)
-      {
         Serial.println("Led loop start");
         for (int i = 0; i < 4; i++)
         {
@@ -461,10 +463,7 @@ namespace LedDriver
           flashLED(100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
           flashLED(750, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
-
         delay(500);
-        break;
-      }
     }
   };
 }

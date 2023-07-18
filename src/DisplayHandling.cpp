@@ -364,6 +364,7 @@ namespace DisplayHandling
         ChestState isChestClosed()
         {
             int doorPin = 13;
+            delay(500);
             if (digitalRead(doorPin)) {
                 return closed;
             } else {
@@ -390,13 +391,13 @@ namespace DisplayHandling
 
         void lookForNewMessages()
         {
+            int queueCount = network.getQueueStatus();
             while (true)
             {
                 checkWifi();
-                int queueCount = network.getQueueStatus();
+                
                 //If the chest got opened
                 if (isChestClosed() == open) {
-                    lastKnownChestState = open;
                     return;
                 }
                 //If there is an unread message
@@ -405,11 +406,12 @@ namespace DisplayHandling
                     while (true)
                     {
                         checkWifi();
-                        // Led villogtatás
-                        LedDriverClass().ledStart();
+
+                        //Led villogtatás
+                        
                         if (isChestClosed() == open)
                         {
-                            lastKnownChestState = open;
+                            Serial.println("Entered");
                             Serial.println("Exited");
                             return;
                         }
@@ -431,9 +433,8 @@ namespace DisplayHandling
 
         void watchAlways(bool withCheckWifi = true)
         {
-            if (this->isChestClosed() == closed && lastKnownChestState == open)
+            if (this->isChestClosed() == closed)
             {
-                lastKnownChestState == closed;
                 onChestClosed();
             }
 
@@ -581,7 +582,12 @@ namespace DisplayHandling
             {
                 buttons[i].drawBox();
             }
-            messageCount = network.getQueueStatus();
+            messageCount = -1;
+            try {
+                messageCount = network.getQueueStatus();
+            } catch(...) {
+                onErrorThrown(L"Problem on getting\nthe queue Status.");
+            }
             if (messageCount == 0)
             {
                 this->blockMessages = true;
@@ -765,21 +771,21 @@ namespace DisplayHandling
             {
             case Home:
                 drawHomeScreen();
-                xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
-                th.terminateAllTasks(th.drawHomeScreen);
+                //xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
+                //th.terminateAllTasks(th.drawHomeScreen);
                 break;
             case History:
                 drawHistoryScreen();
                 break;
             case Love:
                 drawLoveScreen();
-                xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawLoveScreen);
-                th.terminateAllTasks(th.drawLoveScreen);
+                //xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawLoveScreen);
+                //th.terminateAllTasks(th.drawLoveScreen);
                 break;
             case Message:
                 drawMessageScreen();
-                xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawMessageScreen);
-                th.terminateAllTasks(th.drawMessageScreen);
+                //xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawMessageScreen);
+                //th.terminateAllTasks(th.drawMessageScreen);
                 break;
             case Downloading:
                 drawDownloadScreen();
