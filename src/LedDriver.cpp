@@ -372,25 +372,13 @@ namespace LedDriver
       delay(1000);
     }
 
-    bool isFirstRun = true;
-
-    static void ledStartTask(void* params) {
-      LedDriverClass ld = LedDriverClass();
-      if (ld.isFirstRun) {
-        vTaskSuspend(NULL);
-      }
-      ld.isFirstRun = false;
-      
-      ld.ledStart();
-      //vTaskSuspend(NULL);
-
-      
-    }
-    void ledStart()
+    void ledStart(int section)
     {
-        Serial.println("Led loop start");
-        for (int i = 0; i < 4; i++)
+        Serial.print("inside ledStart with sectionNum: ");
+        Serial.println(section);
+        if (section <= 4)
         {
+          delay(250);
           flashLED(onTime, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
           flashLED(onTime, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
           flashLED(onTime, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -408,12 +396,13 @@ namespace LedDriver
           flashLED(onTime, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0);
           flashLED(onTime, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0);
           flashLED(250, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+          return;
         }
+        
 
-        delay(500);
-
-        for (int i = 0; i < 4; i++)
+        if (section > 4 && section <= 8)
         {
+          delay(250);
           flashLED(onTime, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
           flashLED(onTime, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
           flashLED(onTime, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -430,11 +419,11 @@ namespace LedDriver
           flashLED(onTime, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
           flashLED(onTime, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
           flashLED(onTime, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+          return;
         }
 
-        delay(500);
 
-        for (int i = 0; i < 8; i++)
+        if (section > 8 && section <= 16)
         {
           flashLED(onTime, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0);
           flashLED(onTime, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0);
@@ -444,26 +433,25 @@ namespace LedDriver
           flashLED(onTime, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1);
           flashLED(onTime, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1);
           flashLED(onTime, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1);
+          return;
         }
 
-        delay(500);
-
-        for (int i = 0; i < 8; i++)
+        if (section > 16 && section <= 24)
         {
           flashLED(250, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0);
           flashLED(250, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
+          return;
         }
 
-        delay(500);
 
-        for (int i = 0; i < 6; i++)
+        if (section > 24 && section <= 30)
         {
           flashLED(100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
           flashLED(100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
           flashLED(100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
           flashLED(750, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+          return;
         }
-        delay(500);
     }
   };
 }

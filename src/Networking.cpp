@@ -33,6 +33,14 @@ namespace Networking
         }
     };
 
+    typedef struct {
+        int type;
+        String serverContent;
+        int year;
+        int month;
+        int day;
+
+    } LoveTextData;
     class Network
     {
     private:
@@ -165,7 +173,7 @@ namespace Networking
             } else throw std::runtime_error("Problem with lastPostDisplayed.");
         }
 
-        wchar_t* getLoveText()
+        LoveTextData getLoveText()
         {
             HTTPClient http;
             http.begin(baseUrl + "/get/loveText");
@@ -178,10 +186,17 @@ namespace Networking
                 JsonObject obj = doc.as<JsonObject>();
 
                 /// The required JSON Data:
-                const String loveTextStr = obj["loveText"];
+                int type = obj["type"];
+                String loveTextStr = obj["loveText"];
+                int year = obj["year"];
+                int month = obj["month"];
+                int day = obj["day"];
+
+                LoveTextData result = {type, loveTextStr, year, month, day};
+
                 // TODO: Need to prepare predefined love texts, based on enum cases coming from the server.
                 http.end();
-                return L"Tészta levéáú nagyon\nhebele <3";
+                return result;
             }
             else
             {
@@ -189,7 +204,7 @@ namespace Networking
                 throw std::runtime_error("Problem with getLoveText");
             }
             http.end();
-            return L"Connection error!";
+            throw std::runtime_error("Problem with getLoveText");
         }
     };
 }

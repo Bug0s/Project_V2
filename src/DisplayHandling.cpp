@@ -11,7 +11,6 @@
 #include "TaskHandler.h"
 #include "LedDriver.cpp"
 
-
 using namespace DataHandling;
 using namespace Networking;
 using namespace TaskHandler;
@@ -346,16 +345,16 @@ namespace DisplayHandling
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
         XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
 
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
         enum ChestState
         {
             closed,
@@ -365,24 +364,29 @@ namespace DisplayHandling
         {
             int doorPin = 13;
             delay(500);
-            if (digitalRead(doorPin)) {
+            if (digitalRead(doorPin))
+            {
                 return closed;
-            } else {
+            }
+            else
+            {
                 return open;
             }
         }
-        
+
         ChestState lastKnownChestState = ChestState::open;
         bool wiFiGotConnected = true;
 
-        void checkWifi() {
-            if (WiFi.status() != WL_CONNECTED) {
+        void checkWifi()
+        {
+            if (WiFi.status() != WL_CONNECTED)
+            {
                 wiFiGotConnected = false;
                 WiFi.begin("Macko", "Maczkonokia01");
                 this->onTemporaryError(L"Elment a WiFi jel.\n\nVárj egy pillanatot\namíg újra csatlakozom...");
                 delay(2000);
-                while(WiFi.status() != WL_CONNECTED) {
-
+                while (WiFi.status() != WL_CONNECTED)
+                {
                 }
                 makeTransition(Home);
                 return;
@@ -391,28 +395,44 @@ namespace DisplayHandling
 
         void lookForNewMessages()
         {
-            int queueCount = network.getQueueStatus();
+            // Get the queue every 5 second
+            const unsigned long getQueueInterval = 5000;
+            // Store when was the last queue got.
+            unsigned long lastQueueGot = 0;
+            int queueCount = 0;
+            int sectionNum = 1;
+            LedDriverClass ld = LedDriverClass();
             while (true)
             {
-                checkWifi();
-                
-                //If the chest got opened
-                if (isChestClosed() == open) {
+                unsigned long currentTime = millis();
+                if (currentTime - lastQueueGot >= getQueueInterval)
+                {
+                    checkWifi();
+                    queueCount = network.getQueueStatus();
+                    lastQueueGot = millis();
+                }
+
+                // If the chest got opened
+                if (isChestClosed() == open)
+                {
                     return;
                 }
-                //If there is an unread message
+                // If there is an unread message
                 if (queueCount > 0)
                 {
                     while (true)
                     {
                         checkWifi();
 
-                        //Led villogtatás
-                        
+                        // Led villogtatás
+                        ld.ledStart(sectionNum++);
+                        if (sectionNum == 31)
+                        {
+                            sectionNum = 1;
+                        }
+
                         if (isChestClosed() == open)
                         {
-                            Serial.println("Entered");
-                            Serial.println("Exited");
                             return;
                         }
                     }
@@ -430,7 +450,6 @@ namespace DisplayHandling
         }
 
     public:
-
         void watchAlways(bool withCheckWifi = true)
         {
             if (this->isChestClosed() == closed)
@@ -438,22 +457,23 @@ namespace DisplayHandling
                 onChestClosed();
             }
 
-            if (withCheckWifi) checkWifi();
+            if (withCheckWifi)
+                checkWifi();
         }
 
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
-        //END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
+        // END OF OPERATIONHANDLING -------------------------------------------------------------------------------
 
         int messageCount;
-        
+
         void initTFT()
         {
             gfx->begin();
@@ -467,9 +487,7 @@ namespace DisplayHandling
             // It should be HOMESCREEN to drawn!!! / testCase
             drawHomeScreen();
             // xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
-            //vTaskStartScheduler();
-
-            
+            // vTaskStartScheduler();
         }
 
         // Sets the background led strongness by percentage
@@ -583,9 +601,12 @@ namespace DisplayHandling
                 buttons[i].drawBox();
             }
             messageCount = -1;
-            try {
+            try
+            {
                 messageCount = network.getQueueStatus();
-            } catch(...) {
+            }
+            catch (...)
+            {
                 onErrorThrown(L"Problem on getting\nthe queue Status.");
             }
             if (messageCount == 0)
@@ -631,7 +652,7 @@ namespace DisplayHandling
                 }
                 if (senseObject(historyButton))
                 {
-                    makeTransition(Screens(History));
+                    // makeTransition(Screens(History));
                     break;
                 }
             };
@@ -717,6 +738,41 @@ namespace DisplayHandling
         {
             createHeadline();
         }
+        // ONLY FOR TYPE 2 loveTextToDisplay!!
+        wchar_t *stringToWchar(const String &str)
+        {
+            // Convert String to std::string
+            std::string stdStr = str.c_str();
+
+            // Allocate memory for wchar_t* and convert std::string to wide string
+            size_t bufferSize = stdStr.length() + 1; // +1 for null-terminator
+            wchar_t *wcharStr = new wchar_t[bufferSize];
+            mbstowcs(wcharStr, stdStr.c_str(), bufferSize);
+
+            return wcharStr;
+        }
+
+        wchar_t *loveTextToDisplay(LoveTextData data)
+        {
+            if (data.type == 0)
+            {
+
+                return L"Nagyon szeretlek Pici Szivecském";
+            }
+            else if (data.type == 1)
+            {
+                wchar_t *format = L"Már %04d éve, %02d hónapja és %02d napja együtt vagyunk.";
+                int bufferSize = swprintf(nullptr, 0, format, data.year, data.month, data.day);
+                wchar_t *result = new wchar_t[bufferSize + 1];
+                swprintf(result, bufferSize, format, data.year, data.month, data.day);
+                return result;
+            }
+            else if (data.type == 2)
+            {
+                return stringToWchar(data.serverContent);
+            }
+            throw std::runtime_error("Not valid LoveTextType!");
+        }
 
         static void taskDrawLoveScreen(void *params)
         {
@@ -732,7 +788,17 @@ namespace DisplayHandling
             createHeadline();
             gfx->setCursor(100, 100);
             gfx->println("");
-            this->displayComplexText(segmentText(network.getLoveText(), 8));
+            try
+            {
+                LoveTextData loveData = network.getLoveText();
+                wchar_t *textToDisplay = loveTextToDisplay(loveData);
+                this->displayComplexText(segmentText(textToDisplay, 8));
+                delete[] textToDisplay;
+            }
+            catch (...)
+            {
+                onErrorThrown(L"Error on getting the love data.");
+            }
             while (true)
             {
                 watchAlways(false);
@@ -742,9 +808,6 @@ namespace DisplayHandling
                     break;
                 }
             }
-
-            // this->displayComplexText(L"teszt A Á E É I Í O Ó Ö Ő U Ú Ü Ű. Teszt VÉGE");
-            // this->displayComplexText(L"teszt O Ö Ő U Ú Ü Ű");
         }
 
         void makeTransition(Screens screenName)
@@ -771,21 +834,21 @@ namespace DisplayHandling
             {
             case Home:
                 drawHomeScreen();
-                //xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
-                //th.terminateAllTasks(th.drawHomeScreen);
+                // xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Draw Home screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
+                // th.terminateAllTasks(th.drawHomeScreen);
                 break;
             case History:
                 drawHistoryScreen();
                 break;
             case Love:
                 drawLoveScreen();
-                //xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawLoveScreen);
-                //th.terminateAllTasks(th.drawLoveScreen);
+                // xTaskCreate(DisplayHandler::taskDrawLoveScreen, "Draw Love Screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawLoveScreen);
+                // th.terminateAllTasks(th.drawLoveScreen);
                 break;
             case Message:
                 drawMessageScreen();
-                //xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawMessageScreen);
-                //th.terminateAllTasks(th.drawMessageScreen);
+                // xTaskCreate(DisplayHandler::taskDrawMessageScreen, "Draw Message screen and sense touches on it", 1200000, NULL, 1, TaskHandlers::drawMessageScreen);
+                // th.terminateAllTasks(th.drawMessageScreen);
                 break;
             case Downloading:
                 drawDownloadScreen();
@@ -820,7 +883,8 @@ namespace DisplayHandling
                 }
             }
         }
-        void onTemporaryError(wchar_t* errorMessage) {
+        void onTemporaryError(wchar_t *errorMessage)
+        {
             Box background = Box(90, 50, 300, 160, BLACK, gfx);
             Box homeButton = Box((background.x2 - background.x1) / 2 + 90 - 25, background.y2 - 50 - 20, 50, 50, YELLOW, gfx);
             background.drawBox();
@@ -876,6 +940,5 @@ namespace DisplayHandling
         }
     };
 }
-
 
 #endif
