@@ -761,11 +761,8 @@ namespace DisplayHandling
             }
             else if (data.type == 1)
             {
-                wchar_t *format = L"Már %04d éve, %02d hónapja és %02d napja együtt vagyunk.";
-                int bufferSize = swprintf(nullptr, 0, format, data.year, data.month, data.day);
-                wchar_t *result = new wchar_t[bufferSize + 1];
-                swprintf(result, bufferSize, format, data.year, data.month, data.day);
-                return result;
+                //TODO: if type == 1 do this dinamially! (We have to make this function to void and to print the content to the tft by itself.)
+                return L"     Már ennyi ideje együtt vagyunk:\n2023 év 4 hónap és 2 nap.";
             }
             else if (data.type == 2)
             {
@@ -793,7 +790,6 @@ namespace DisplayHandling
                 LoveTextData loveData = network.getLoveText();
                 wchar_t *textToDisplay = loveTextToDisplay(loveData);
                 this->displayComplexText(segmentText(textToDisplay, 8));
-                delete[] textToDisplay;
             }
             catch (...)
             {
