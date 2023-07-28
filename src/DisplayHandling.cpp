@@ -10,6 +10,7 @@
 #include "freertos/task.h"
 #include "TaskHandler.h"
 #include "LedDriver.cpp"
+#include "vector"
 
 using namespace DataHandling;
 using namespace Networking;
@@ -108,6 +109,26 @@ namespace DisplayHandling
             segmentedText[j] = L'\0';
 
             return segmentedText;
+        }
+        //Error around this func
+        wchar_t* decodeFormattedText(String text) {
+            //std::vector<wchar_t> result;
+            String specCharId = "";
+            Serial.println(text);
+            for(int i = 0; i < text.length(); i++) {
+                char currentChar = text[i];
+                if (currentChar == '%') {
+                    char firstDigit = text[i+1];
+                    char secondDigit = text[i+2];
+                    //specCharId = firstDigit  + secondDigit;
+                    //i += 2;
+                    Serial.println(firstDigit);
+                    Serial.println(secondDigit);
+                    Serial.println(specCharId);
+                }
+
+            }
+            
         }
         bool isSpecialChar(wchar_t c)
         {
@@ -711,7 +732,15 @@ namespace DisplayHandling
             }
             gfx->drawFastHLine(380, 220, 100, BLACK);
             drawJpeg(localImage, 40, 40);
-            network.lastPostDisplayed();
+            gfx->println(queueItem.message);
+
+            displayComplexText(stringToWchar(queueItem.message));
+
+            try {
+                network.lastPostDisplayed();
+            } catch(...) {
+                onErrorThrown(L"Problem on contacting\nthe server. (L717)");
+            }
             while (true)
             {
                 watchAlways();
@@ -752,21 +781,36 @@ namespace DisplayHandling
             return wcharStr;
         }
 
-        wchar_t *loveTextToDisplay(LoveTextData data)
+        void displayLoveText(LoveTextData data)
         {
             if (data.type == 0)
             {
 
-                return L"Nagyon szeretlek Pici Szivecském";
+                 displayComplexText(segmentText(L"Nagyon szeretlek Pici Szivecském", 8));
+                 return;
             }
             else if (data.type == 1)
             {
-                //TODO: if type == 1 do this dinamially! (We have to make this function to void and to print the content to the tft by itself.)
-                return L"     Már ennyi ideje együtt vagyunk:\n2023 év 4 hónap és 2 nap.";
+
+                decodeFormattedText("Ez egy p%12lda szoveg");
+                return;
+                 displayComplexText(segmentText(L"     Már ennyi ideje együtt vagyunk:\n", 8));
+                 gfx->print(data.year);
+                 displayComplexText(segmentText(L" éve, ", 8));
+                 gfx->print(data.month);
+                 displayComplexText(segmentText(L" hónapja és ", 8));
+                 gfx->print(data.day);
+                 displayComplexText(segmentText(L" napja.", 8));
+                 displayComplexText(segmentText(L"\n\nNagyon szeretlek Szivem", 2));
+
+                 return;
             }
             else if (data.type == 2)
             {
-                return stringToWchar(data.serverContent);
+                wchar_t* dataStringAsWchar = stringToWchar(data.serverContent);
+                wchar_t* segmentedDataString = segmentText(dataStringAsWchar, 8);
+                displayComplexText(segmentedDataString);
+                return;
             }
             throw std::runtime_error("Not valid LoveTextType!");
         }
@@ -788,12 +832,11 @@ namespace DisplayHandling
             try
             {
                 LoveTextData loveData = network.getLoveText();
-                wchar_t *textToDisplay = loveTextToDisplay(loveData);
-                this->displayComplexText(segmentText(textToDisplay, 8));
+                displayLoveText(loveData);
             }
             catch (...)
             {
-                onErrorThrown(L"Error on getting the love data.");
+                onErrorThrown(L"Error on getting\nthe love data.");
             }
             while (true)
             {
