@@ -136,7 +136,7 @@ namespace DisplayHandling
             gfx->drawPixel(cursorX() + 6, cursorY() - 0, WHITE);
             gfx->print("u");
         }
-
+        
         void draw_uDoubleLong()
         {
             gfx->drawLine(cursorX() + 2, cursorY() - 0, cursorX() + 2 + 2, cursorY() - 0 - 2, WHITE);
@@ -340,7 +340,7 @@ namespace DisplayHandling
             return segmentedText;
         }
 
-        void displayDecodeFormattedText(String text)
+        void displayDecodedFormattedText(String text)
         {
             int len = text.length();
             for (int i = 0; i < len; i++)
@@ -355,7 +355,6 @@ namespace DisplayHandling
                         num = num * 10 + (text.charAt(j) - '0');
                         j++;
                     }
-                    Serial.println(num);
                     switch (num)
                     {
                     case 10:
@@ -866,7 +865,7 @@ namespace DisplayHandling
             }
             if (messageCount == 0)
             {
-                this->blockMessages = true;
+                drawJpeg("/backgrounds/mailOff.jpg", messageButton.x1, messageButton.y1);
             }
             else if (messageCount == 1)
             {
@@ -967,7 +966,7 @@ namespace DisplayHandling
             gfx->drawFastHLine(380, 220, 100, BLACK);
             drawJpeg(localImage, 40, 40);
 
-            displayDecodeFormattedText(queueItem.message);
+            displayDecodedFormattedText(queueItem.message);
 
             try
             {
@@ -1034,7 +1033,7 @@ namespace DisplayHandling
             try
             {
                 LoveTextData loveData = network.getLoveText();
-                displayDecodeFormattedText(segmentText(loveData.serverContent, 2));
+                displayDecodedFormattedText(segmentText(loveData.serverContent, 2));
 
             
             }
