@@ -46,6 +46,193 @@ namespace DisplayHandling
         Message,
         Love
     };
+    struct DrawSpecialCharacters
+    {
+    private:
+        Arduino_GFX *gfx;
+        int16_t cursorX()
+        {
+            return gfx->getCursorX();
+        }
+        int16_t cursorY()
+        {
+            return gfx->getCursorY();
+        }
+
+    public:
+        DrawSpecialCharacters(Arduino_GFX *gfx)
+        {
+            this->gfx = gfx;
+        }
+        void draw_aLong()
+        {
+            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->print("a");
+        }
+        void draw_eLong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->print("e");
+        }
+        void draw_iLong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->print("i");
+        }
+
+        void draw_oLong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->print("o");
+        }
+
+        void draw_oDoubleShort()
+        {
+            gfx->drawPixel(cursorX() + 3, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 0, WHITE);
+
+            gfx->drawPixel(cursorX() + 7, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 0, WHITE);
+
+            gfx->print("o");
+        }
+
+        void draw_oDoubleLong()
+        {
+            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+
+            gfx->drawLine(cursorX() + 6, cursorY() - 0, cursorX() + 6 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 7, cursorY() - 0, cursorX() + 7 + 2, cursorY() - 0 - 2, WHITE);
+
+            gfx->print("o");
+        }
+
+        void draw_uLong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->print("u");
+        }
+
+        void draw_uDoubleShort()
+        {
+            gfx->drawPixel(cursorX() + 3, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 0, WHITE);
+
+            gfx->drawPixel(cursorX() + 7, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() + 1, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 0, WHITE);
+            gfx->print("u");
+        }
+
+        void draw_uDoubleLong()
+        {
+            gfx->drawLine(cursorX() + 2, cursorY() - 0, cursorX() + 2 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, WHITE);
+
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 6, cursorY() - 0, cursorX() + 6 + 2, cursorY() - 0 - 2, WHITE);
+
+            gfx->print("u");
+        }
+
+        void draw_ALong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 3, cursorX() + 4 + 2, cursorY() - 0 - 2 - 3, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 3, cursorX() + 5 + 2, cursorY() - 0 - 2 - 3, WHITE);
+            gfx->print("A");
+        }
+
+        void draw_ELong()
+        {
+            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 3, cursorX() + 3 + 2, cursorY() - 0 - 2 - 3, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 3, cursorX() + 4 + 2, cursorY() - 0 - 2 - 3, WHITE);
+            gfx->print("E");
+        }
+
+        void draw_ILong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->print("I");
+        }
+
+        void draw_OLong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->print("O");
+        }
+
+        void draw_ODoubleShort()
+        {
+            gfx->drawPixel(cursorX() + 3, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 2, WHITE);
+
+            gfx->drawPixel(cursorX() + 7, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 2, WHITE);
+            gfx->print("O");
+        }
+
+        void draw_ODoubleLong()
+        {
+            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 2, cursorX() + 3 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
+
+            gfx->drawLine(cursorX() + 6, cursorY() - 0 - 2, cursorX() + 6 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 7, cursorY() - 0 - 2, cursorX() + 7 + 2, cursorY() - 0 - 2 - 2, WHITE);
+
+            gfx->print("O");
+        }
+
+        void draw_ULong()
+        {
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->print("U");
+        }
+
+        void draw_UDoubleShort()
+        {
+            gfx->drawPixel(cursorX() + 3, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 3, WHITE);
+
+            gfx->drawPixel(cursorX() + 7, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 3, WHITE);
+            gfx->print("U");
+        }
+
+        void draw_UDoubleLong()
+        {
+            gfx->drawLine(cursorX() + 2, cursorY() - 0 - 2, cursorX() + 2 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 2, cursorX() + 3 + 2, cursorY() - 0 - 2 - 2, WHITE);
+
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 6, cursorY() - 0 - 2, cursorX() + 6 + 2, cursorY() - 0 - 2 - 2, WHITE);
+
+            gfx->print("U");
+        }
+    };
 
     class DisplayHandler
     {
@@ -110,25 +297,152 @@ namespace DisplayHandling
 
             return segmentedText;
         }
-        //Error around this func
-        wchar_t* decodeFormattedText(String text) {
-            //std::vector<wchar_t> result;
-            String specCharId = "";
-            Serial.println(text);
-            for(int i = 0; i < text.length(); i++) {
-                char currentChar = text[i];
-                if (currentChar == '%') {
-                    char firstDigit = text[i+1];
-                    char secondDigit = text[i+2];
-                    //specCharId = firstDigit  + secondDigit;
-                    //i += 2;
-                    Serial.println(firstDigit);
-                    Serial.println(secondDigit);
-                    Serial.println(specCharId);
-                }
 
+        String segmentText(String text, int lineStart)
+        {
+            int textLength = text.length();
+            int numLineBreaks = 0;
+
+            // Count the number of line breaks in the text
+            for (int i = 0; i < textLength; i++)
+            {
+                if (text[i] == L'\n')
+                {
+                    numLineBreaks++;
+                }
             }
-            
+
+            // Calculate the new text length with additional line breaks and whitespaces
+            int newTextLength = textLength + (numLineBreaks * 2 + 1) * lineStart;
+
+            // Create a new wstring to store the segmented text
+            String segmentedText;
+            segmentedText.reserve(newTextLength);
+
+            for (int i = 0; i < textLength; i++)
+            {
+                segmentedText += text[i];
+                if (text[i] == L'\n')
+                {
+                    // Add the specified number of whitespaces after a line break
+                    for (int k = 0; k < lineStart; k++)
+                    {
+                        segmentedText += L' ';
+                    }
+                    segmentedText += L'\n'; // Add an additional line break
+                    for (int k = 0; k < lineStart; k++)
+                    {
+                        segmentedText += L' ';
+                    }
+                }
+            }
+
+            return segmentedText;
+        }
+
+        void displayDecodeFormattedText(String text)
+        {
+            int len = text.length();
+            for (int i = 0; i < len; i++)
+            {
+                if (text.charAt(i) == '%' && i + 1 < len && isdigit(text.charAt(i + 1)))
+                {
+                    int num = 0;
+                    int j = i + 1;
+                    i += 2;
+                    while (j < len && isdigit(text.charAt(j)))
+                    {
+                        num = num * 10 + (text.charAt(j) - '0');
+                        j++;
+                    }
+                    Serial.println(num);
+                    switch (num)
+                    {
+                    case 10:
+                        drawSpecChar.draw_aLong();
+                        break;
+
+                    case 11:
+                        drawSpecChar.draw_eLong();
+                        break;
+
+                    case 12:
+                        drawSpecChar.draw_iLong();
+                        break;
+
+                    case 13:
+                        drawSpecChar.draw_oLong();
+                        break;
+
+                    case 14:
+                        drawSpecChar.draw_oDoubleShort();
+                        break;
+
+                    case 15:
+                        drawSpecChar.draw_oDoubleLong();
+                        break;
+
+                    case 16:
+                        drawSpecChar.draw_uLong();
+                        break;
+
+                    case 17:
+                        drawSpecChar.draw_uDoubleShort();
+                        break;
+
+                    case 18:
+                        drawSpecChar.draw_uDoubleLong();
+                        break;
+
+                    // UPPERCASED LETTERS:---------------------------
+                    case 20:
+                        drawSpecChar.draw_ALong();
+                        break;
+
+                    case 21:
+                        drawSpecChar.draw_ELong();
+                        break;
+
+                    case 22:
+                        drawSpecChar.draw_ILong();
+                        break;
+
+                    case 23:
+                        drawSpecChar.draw_OLong();
+                        break;
+
+                    case 24:
+                        drawSpecChar.draw_ODoubleShort();
+                        break;
+
+                    case 25:
+                        drawSpecChar.draw_ODoubleLong();
+                        break;
+
+                    case 26:
+                        drawSpecChar.draw_ULong();
+                        break;
+
+                    case 27:
+                        drawSpecChar.draw_UDoubleShort();
+                        break;
+
+                    case 28:
+                        drawSpecChar.draw_UDoubleLong();
+                        break;
+
+                    default:
+                        throw std::runtime_error("Unidentified char at L394");
+                        break;
+                    }
+                    continue;
+                }
+                else
+                {
+                    gfx->print(text.charAt(i));
+                    continue;
+                }
+            }
         }
         bool isSpecialChar(wchar_t c)
         {
@@ -159,162 +473,81 @@ namespace DisplayHandling
 
                     if (currentChar == *L"á")
                     {
-                        gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->print("a");
+                        drawSpecChar.draw_aLong();
                     }
 
                     else if (currentChar == *L"é")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->print("e");
+                        drawSpecChar.draw_eLong();
                     }
                     else if (currentChar == *L"í")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->print("i");
+                        drawSpecChar.draw_iLong();
                     }
 
                     else if (currentChar == *L"ó")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->print("o");
+                        drawSpecChar.draw_oLong();
                     }
                     else if (currentChar == *L"ö")
                     {
-                        gfx->drawPixel(cursorX + 3, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 0, WHITE);
-
-                        gfx->drawPixel(cursorX + 7, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 0, WHITE);
-
-                        gfx->print("o");
+                        drawSpecChar.draw_oDoubleShort();
                     }
                     else if (currentChar == *L"ő")
                     {
-                        gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
-
-                        gfx->drawLine(cursorX + 6, cursorY - 0, cursorX + 6 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 7, cursorY - 0, cursorX + 7 + 2, cursorY - 0 - 2, WHITE);
-
-                        gfx->print("o");
+                        drawSpecChar.draw_oDoubleLong();
                     }
                     else if (currentChar == *L"ú")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0, cursorX + 4 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->print("u");
+                        drawSpecChar.draw_uLong();
                     }
 
                     else if (currentChar == *L"ü")
                     {
-                        gfx->drawPixel(cursorX + 3, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 0, WHITE);
-
-                        gfx->drawPixel(cursorX + 7, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 0, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY + 1, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 0, WHITE);
-                        gfx->print("u");
+                        drawSpecChar.draw_uDoubleShort();
                     }
                     else if (currentChar == *L"ű")
                     {
-                        gfx->drawLine(cursorX + 2, cursorY - 0, cursorX + 2 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 3, cursorY - 0, cursorX + 3 + 2, cursorY - 0 - 2, WHITE);
-
-                        gfx->drawLine(cursorX + 5, cursorY - 0, cursorX + 5 + 2, cursorY - 0 - 2, WHITE);
-                        gfx->drawLine(cursorX + 6, cursorY - 0, cursorX + 6 + 2, cursorY - 0 - 2, WHITE);
-
-                        gfx->print("u");
+                        drawSpecChar.draw_uDoubleLong();
                     }
                     else if (currentChar == *L"Á")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0 - 3, cursorX + 4 + 2, cursorY - 0 - 2 - 3, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0 - 3, cursorX + 5 + 2, cursorY - 0 - 2 - 3, WHITE);
-                        gfx->print("A");
+                        drawSpecChar.draw_ALong();
                     }
 
                     else if (currentChar == *L"É")
                     {
-                        gfx->drawLine(cursorX + 3, cursorY - 0 - 3, cursorX + 3 + 2, cursorY - 0 - 2 - 3, WHITE);
-                        gfx->drawLine(cursorX + 4, cursorY - 0 - 3, cursorX + 4 + 2, cursorY - 0 - 2 - 3, WHITE);
-                        gfx->print("E");
+                        drawSpecChar.draw_ELong();
                     }
                     else if (currentChar == *L"Í")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->print("I");
+                        drawSpecChar.draw_ILong();
                     }
 
                     else if (currentChar == *L"Ó")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->print("O");
+                        drawSpecChar.draw_OLong();
                     }
                     else if (currentChar == *L"Ö")
                     {
-                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 2, WHITE);
-
-                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 2, WHITE);
-                        gfx->print("O");
+                        drawSpecChar.draw_ODoubleShort();
                     }
                     else if (currentChar == *L"Ő")
                     {
-                        gfx->drawLine(cursorX + 3, cursorY - 0 - 2, cursorX + 3 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
-
-                        gfx->drawLine(cursorX + 6, cursorY - 0 - 2, cursorX + 6 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->drawLine(cursorX + 7, cursorY - 0 - 2, cursorX + 7 + 2, cursorY - 0 - 2 - 2, WHITE);
-
-                        gfx->print("O");
+                        drawSpecChar.draw_ODoubleLong();
                     }
                     else if (currentChar == *L"Ú")
                     {
-                        gfx->drawLine(cursorX + 4, cursorY - 0 - 2, cursorX + 4 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->print("U");
+                        drawSpecChar.draw_ULong();
                     }
 
                     else if (currentChar == *L"Ü")
                     {
-                        gfx->drawPixel(cursorX + 3, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 3, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 2, cursorY - 3, WHITE);
-
-                        gfx->drawPixel(cursorX + 7, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 7, cursorY - 3, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 2, WHITE);
-                        gfx->drawPixel(cursorX + 6, cursorY - 3, WHITE);
-                        gfx->print("U");
+                        drawSpecChar.draw_uDoubleShort();
                     }
                     else if (currentChar == *L"Ű")
                     {
-                        gfx->drawLine(cursorX + 2, cursorY - 0 - 2, cursorX + 2 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->drawLine(cursorX + 3, cursorY - 0 - 2, cursorX + 3 + 2, cursorY - 0 - 2 - 2, WHITE);
-
-                        gfx->drawLine(cursorX + 5, cursorY - 0 - 2, cursorX + 5 + 2, cursorY - 0 - 2 - 2, WHITE);
-                        gfx->drawLine(cursorX + 6, cursorY - 0 - 2, cursorX + 6 + 2, cursorY - 0 - 2 - 2, WHITE);
-
-                        gfx->print("U");
+                        drawSpecChar.draw_UDoubleLong();
                     }
                     else
                     {
@@ -365,6 +598,7 @@ namespace DisplayHandling
     public:
         Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
         XPT2046_Touchscreen ts = XPT2046_Touchscreen(21);
+        DrawSpecialCharacters drawSpecChar = DrawSpecialCharacters(gfx);
 
         // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
         // START OF OPERATIONHANDLING -------------------------------------------------------------------------------
@@ -732,13 +966,15 @@ namespace DisplayHandling
             }
             gfx->drawFastHLine(380, 220, 100, BLACK);
             drawJpeg(localImage, 40, 40);
-            gfx->println(queueItem.message);
 
-            displayComplexText(stringToWchar(queueItem.message));
+            displayDecodeFormattedText(queueItem.message);
 
-            try {
+            try
+            {
                 network.lastPostDisplayed();
-            } catch(...) {
+            }
+            catch (...)
+            {
                 onErrorThrown(L"Problem on contacting\nthe server. (L717)");
             }
             while (true)
@@ -781,40 +1017,6 @@ namespace DisplayHandling
             return wcharStr;
         }
 
-        void displayLoveText(LoveTextData data)
-        {
-            if (data.type == 0)
-            {
-
-                 displayComplexText(segmentText(L"Nagyon szeretlek Pici Szivecském", 8));
-                 return;
-            }
-            else if (data.type == 1)
-            {
-
-                decodeFormattedText("Ez egy p%12lda szoveg");
-                return;
-                 displayComplexText(segmentText(L"     Már ennyi ideje együtt vagyunk:\n", 8));
-                 gfx->print(data.year);
-                 displayComplexText(segmentText(L" éve, ", 8));
-                 gfx->print(data.month);
-                 displayComplexText(segmentText(L" hónapja és ", 8));
-                 gfx->print(data.day);
-                 displayComplexText(segmentText(L" napja.", 8));
-                 displayComplexText(segmentText(L"\n\nNagyon szeretlek Szivem", 2));
-
-                 return;
-            }
-            else if (data.type == 2)
-            {
-                wchar_t* dataStringAsWchar = stringToWchar(data.serverContent);
-                wchar_t* segmentedDataString = segmentText(dataStringAsWchar, 8);
-                displayComplexText(segmentedDataString);
-                return;
-            }
-            throw std::runtime_error("Not valid LoveTextType!");
-        }
-
         static void taskDrawLoveScreen(void *params)
         {
             Serial.println("Love task launched!");
@@ -832,7 +1034,9 @@ namespace DisplayHandling
             try
             {
                 LoveTextData loveData = network.getLoveText();
-                displayLoveText(loveData);
+                displayDecodeFormattedText(segmentText(loveData.serverContent, 2));
+
+            
             }
             catch (...)
             {
