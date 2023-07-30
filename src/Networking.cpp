@@ -45,6 +45,7 @@ namespace Networking
     {
     private:
         String baseUrl = "http://80.99.154.229:5000";
+        String backgroundImageURL = "http://80.99.154.229:5000/static/background/heartBackground.jpg";
 
     public:
         void connectToWiFi(char *ssid, char *password)
@@ -62,7 +63,10 @@ namespace Networking
 
         void downloadImage(String link)
         {
-            // File file = SPIFFS.open("/downloads/breakpoint.png", "w");
+            bool isBackground = false;
+
+            if (link == backgroundImageURL) isBackground = true;
+
             HTTPClient http;
 
             // Send HTTP GET request
@@ -73,7 +77,12 @@ namespace Networking
             if (httpCode == HTTP_CODE_OK)
             {
                 // Open file for writing
-                File file = SPIFFS.open("/image.jpg", FILE_WRITE);
+                File file; 
+                if (!isBackground) {
+                    file = SPIFFS.open("/image.jpg", FILE_WRITE);
+                } else {
+                    file = SPIFFS.open("/background/heartBackground.jpg", FILE_WRITE);
+                }
                 if (!file)
                 {
                     throw std::runtime_error("Download not success. FileWriteError");
@@ -92,6 +101,7 @@ namespace Networking
 
                 // Close file
                 file.close();
+                if (isBackground) this->backgroundDownloaded();
                 Serial.println("Image downloaded");
             }
             else
@@ -205,6 +215,35 @@ namespace Networking
             }
             http.end();
             throw std::runtime_error("Problem with getLoveText");
+        }
+        
+        bool updateBackground() {
+            HTTPClient http;
+            http.begin(baseUrl + "/get/backgroundHandler");
+            int httpCode = http.GET();
+            
+            if (httpCode == 200) {
+                String payload = http.getString();
+                DynamicJsonDocument doc(512);
+                deserializeJson(doc, payload);
+                JsonObject obj = doc.as<JsonObject>();
+
+                bool isDownloaded = obj["isDownloaded"];
+                if (isDownloaded) {
+                    return true;
+                } else {
+                    this->downloadImage(backgroundImageURL);
+                    return true;
+                }
+            }
+            return false;
+        }
+        bool backgroundDownloaded() {
+            HTTPClient http;
+            http.begin(baseUrl + "/newBackgroundDownloaded");
+            int httpCode = http.GET();
+
+            return httpCode == 200;
         }
     };
 }

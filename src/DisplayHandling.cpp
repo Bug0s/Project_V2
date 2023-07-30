@@ -64,171 +64,172 @@ namespace DisplayHandling
         {
             this->gfx = gfx;
         }
+        uint16_t color = WHITE;
         void draw_aLong()
         {
-            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, color);
             gfx->print("a");
         }
         void draw_eLong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, color);
             gfx->print("e");
         }
         void draw_iLong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, color);
             gfx->print("i");
         }
 
         void draw_oLong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, color);
             gfx->print("o");
         }
 
         void draw_oDoubleShort()
         {
-            gfx->drawPixel(cursorX() + 3, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 3, cursorY() - 0, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 0, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 0, color);
 
-            gfx->drawPixel(cursorX() + 7, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 7, cursorY() - 0, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 0, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 0, color);
 
             gfx->print("o");
         }
 
         void draw_oDoubleLong()
         {
-            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, color);
 
-            gfx->drawLine(cursorX() + 6, cursorY() - 0, cursorX() + 6 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 7, cursorY() - 0, cursorX() + 7 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 6, cursorY() - 0, cursorX() + 6 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 7, cursorY() - 0, cursorX() + 7 + 2, cursorY() - 0 - 2, color);
 
             gfx->print("o");
         }
 
         void draw_uLong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0, cursorX() + 4 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, color);
             gfx->print("u");
         }
 
         void draw_uDoubleShort()
         {
-            gfx->drawPixel(cursorX() + 3, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 3, cursorY() - 0, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 0, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 0, color);
 
-            gfx->drawPixel(cursorX() + 7, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 7, cursorY() - 0, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() + 1, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() - 0, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 0, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() + 1, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 0, color);
             gfx->print("u");
         }
         
         void draw_uDoubleLong()
         {
-            gfx->drawLine(cursorX() + 2, cursorY() - 0, cursorX() + 2 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 2, cursorY() - 0, cursorX() + 2 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0, cursorX() + 3 + 2, cursorY() - 0 - 2, color);
 
-            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, WHITE);
-            gfx->drawLine(cursorX() + 6, cursorY() - 0, cursorX() + 6 + 2, cursorY() - 0 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0, cursorX() + 5 + 2, cursorY() - 0 - 2, color);
+            gfx->drawLine(cursorX() + 6, cursorY() - 0, cursorX() + 6 + 2, cursorY() - 0 - 2, color);
 
             gfx->print("u");
         }
 
         void draw_ALong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 3, cursorX() + 4 + 2, cursorY() - 0 - 2 - 3, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 3, cursorX() + 5 + 2, cursorY() - 0 - 2 - 3, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 3, cursorX() + 4 + 2, cursorY() - 0 - 2 - 3, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 3, cursorX() + 5 + 2, cursorY() - 0 - 2 - 3, color);
             gfx->print("A");
         }
 
         void draw_ELong()
         {
-            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 3, cursorX() + 3 + 2, cursorY() - 0 - 2 - 3, WHITE);
-            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 3, cursorX() + 4 + 2, cursorY() - 0 - 2 - 3, WHITE);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 3, cursorX() + 3 + 2, cursorY() - 0 - 2 - 3, color);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 3, cursorX() + 4 + 2, cursorY() - 0 - 2 - 3, color);
             gfx->print("E");
         }
 
         void draw_ILong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, color);
             gfx->print("I");
         }
 
         void draw_OLong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, color);
             gfx->print("O");
         }
 
         void draw_ODoubleShort()
         {
-            gfx->drawPixel(cursorX() + 3, cursorY() - 2, WHITE);
-            gfx->drawPixel(cursorX() + 3, cursorY() - 3, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() - 3, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 2, color);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 3, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 3, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 2, color);
 
-            gfx->drawPixel(cursorX() + 7, cursorY() - 2, WHITE);
-            gfx->drawPixel(cursorX() + 7, cursorY() - 3, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() - 3, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() - 2, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 2, color);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 3, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 3, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 2, color);
             gfx->print("O");
         }
 
         void draw_ODoubleLong()
         {
-            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 2, cursorX() + 3 + 2, cursorY() - 0 - 2 - 2, WHITE);
-            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 2, cursorX() + 3 + 2, cursorY() - 0 - 2 - 2, color);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, color);
 
-            gfx->drawLine(cursorX() + 6, cursorY() - 0 - 2, cursorX() + 6 + 2, cursorY() - 0 - 2 - 2, WHITE);
-            gfx->drawLine(cursorX() + 7, cursorY() - 0 - 2, cursorX() + 7 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 6, cursorY() - 0 - 2, cursorX() + 6 + 2, cursorY() - 0 - 2 - 2, color);
+            gfx->drawLine(cursorX() + 7, cursorY() - 0 - 2, cursorX() + 7 + 2, cursorY() - 0 - 2 - 2, color);
 
             gfx->print("O");
         }
 
         void draw_ULong()
         {
-            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, WHITE);
-            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 4, cursorY() - 0 - 2, cursorX() + 4 + 2, cursorY() - 0 - 2 - 2, color);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, color);
             gfx->print("U");
         }
 
         void draw_UDoubleShort()
         {
-            gfx->drawPixel(cursorX() + 3, cursorY() - 2, WHITE);
-            gfx->drawPixel(cursorX() + 3, cursorY() - 3, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() - 2, WHITE);
-            gfx->drawPixel(cursorX() + 2, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 2, color);
+            gfx->drawPixel(cursorX() + 3, cursorY() - 3, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 2, color);
+            gfx->drawPixel(cursorX() + 2, cursorY() - 3, color);
 
-            gfx->drawPixel(cursorX() + 7, cursorY() - 2, WHITE);
-            gfx->drawPixel(cursorX() + 7, cursorY() - 3, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() - 2, WHITE);
-            gfx->drawPixel(cursorX() + 6, cursorY() - 3, WHITE);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 2, color);
+            gfx->drawPixel(cursorX() + 7, cursorY() - 3, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 2, color);
+            gfx->drawPixel(cursorX() + 6, cursorY() - 3, color);
             gfx->print("U");
         }
 
         void draw_UDoubleLong()
         {
-            gfx->drawLine(cursorX() + 2, cursorY() - 0 - 2, cursorX() + 2 + 2, cursorY() - 0 - 2 - 2, WHITE);
-            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 2, cursorX() + 3 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 2, cursorY() - 0 - 2, cursorX() + 2 + 2, cursorY() - 0 - 2 - 2, color);
+            gfx->drawLine(cursorX() + 3, cursorY() - 0 - 2, cursorX() + 3 + 2, cursorY() - 0 - 2 - 2, color);
 
-            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, WHITE);
-            gfx->drawLine(cursorX() + 6, cursorY() - 0 - 2, cursorX() + 6 + 2, cursorY() - 0 - 2 - 2, WHITE);
+            gfx->drawLine(cursorX() + 5, cursorY() - 0 - 2, cursorX() + 5 + 2, cursorY() - 0 - 2 - 2, color);
+            gfx->drawLine(cursorX() + 6, cursorY() - 0 - 2, cursorX() + 6 + 2, cursorY() - 0 - 2 - 2, color);
 
             gfx->print("U");
         }
@@ -244,6 +245,7 @@ namespace DisplayHandling
         const char *localImage = "/image.jpg";
         // If true the user should not view any new messages!
         bool blockMessages = false;
+        char* backgroundImagePath = "/background/heartBackground.jpg";
         void badConnection()
         {
             this->blockMessages = true;
@@ -306,7 +308,7 @@ namespace DisplayHandling
             // Count the number of line breaks in the text
             for (int i = 0; i < textLength; i++)
             {
-                if (text[i] == L'\n')
+                if (text[i] == '\n')
                 {
                     numLineBreaks++;
                 }
@@ -322,17 +324,17 @@ namespace DisplayHandling
             for (int i = 0; i < textLength; i++)
             {
                 segmentedText += text[i];
-                if (text[i] == L'\n')
+                if (text[i] == '\n')
                 {
                     // Add the specified number of whitespaces after a line break
                     for (int k = 0; k < lineStart; k++)
                     {
-                        segmentedText += L' ';
+                        segmentedText += ' ';
                     }
-                    segmentedText += L'\n'; // Add an additional line break
+                    segmentedText += '\n'; // Add an additional line break
                     for (int k = 0; k < lineStart; k++)
                     {
-                        segmentedText += L' ';
+                        segmentedText += ' ';
                     }
                 }
             }
@@ -567,11 +569,9 @@ namespace DisplayHandling
         private:
             uint16_t color;
             Arduino_GFX *gfx;
-
+        public:
             int width;
             int height;
-
-        public:
             int x1;
             int y1;
             int x2;
@@ -591,6 +591,12 @@ namespace DisplayHandling
             void drawBox()
             {
                 gfx->drawRect(x1, y1, width, height, color);
+            }
+
+            void drawBorder(int16_t lineWidth, uint16_t color) {
+                for (int i = 1; i < lineWidth + 1; i++) {
+                    gfx->drawRect(x1 - i, y1 - i, width + i + i, height + i + i, color);
+                }
             }
         };
 
@@ -697,6 +703,7 @@ namespace DisplayHandling
         void onChestClosed()
         {
             this->setBackgroundLed(0);
+            network.updateBackground();
             // The program execution continues when found new messages!
             lookForNewMessages();
             this->makeTransition(Home);
@@ -737,6 +744,7 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             ts.begin();
+            network.updateBackground();
             // xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
             // It should be HOMESCREEN to drawn!!! / testCase
             drawHomeScreen();
@@ -848,11 +856,12 @@ namespace DisplayHandling
 
             Box buttons[3] = {messageButton, loveButton, historyButton};
             createHeadline();
-            drawJpeg("/backgrounds/homeBackground.jpg", 0, 20);
+            drawJpeg("/background/heartBackground.jpg", 0, 20);
             for (int i = 0; i < 3; i++)
 
             {
                 buttons[i].drawBox();
+                buttons[i].drawBorder(2, BLACK);
             }
             messageCount = -1;
             try
@@ -863,6 +872,7 @@ namespace DisplayHandling
             {
                 onErrorThrown(L"Problem on getting\nthe queue Status.");
             }
+            this->blockMessages = messageCount == 0;
             if (messageCount == 0)
             {
                 drawJpeg("/buttonIcons/mailOff.jpg", messageButton.x1, messageButton.y1);
@@ -885,9 +895,13 @@ namespace DisplayHandling
             }
             drawJpeg("/buttonIcons/loveButton.jpg", loveButton.x1, loveButton.y1);
             drawJpeg("/buttonIcons/historyButton.jpg", historyButton.x1, historyButton.y1);
+
+
             wchar_t *testText = L"Ez egy teljesen\nmintájááraű készült tesztelés.";
             wchar_t *segmented = segmentText(testText, 6);
-            gfx->setCursor(130, 65);
+            gfx->setCursor(130, 85);
+            gfx->setTextColor(BLUE);
+            drawSpecChar.color = BLUE;
             this->displayComplexText(segmented);
 
             while (true)
@@ -931,6 +945,7 @@ namespace DisplayHandling
             }
             catch (std::exception &err)
             {
+                Serial.println(err.what());
                 onErrorThrown(L"Hiba a kép letöltése közben.\nPróbáld újra Baby!");
             }
             makeTransition(Screens(Message));
@@ -1025,17 +1040,30 @@ namespace DisplayHandling
         void drawLoveScreen()
         {
             Box homeButton = Box(380, 220, 100, 100, YELLOW, gfx);
-            homeButton.drawBox();
+            Box messageHolder = Box(50, 40, 380, 200, RED, gfx);
+            this->drawJpeg(backgroundImagePath, 0, 0);
             this->drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
             createHeadline();
-            gfx->setCursor(100, 100);
-            gfx->println("");
+            homeButton.drawBox();
+            homeButton.drawBorder(2, BLACK);
+            gfx->fillRect(messageHolder.x1, messageHolder.y1, messageHolder.width, messageHolder.height, BLACK);
+            messageHolder.drawBox();
+
+            gfx->setCursor(150, 55);
+            gfx->setTextColor(RED);
+            drawSpecChar.color = RED;
+            gfx->setTextSize(3);
+            displayComplexText(L"Napi üzenet");
+            gfx->drawFastHLine(143, 80, 210, RED);
+
+            gfx->setTextSize(2);
+            gfx->setTextColor(WHITE);
+            drawSpecChar.color = WHITE;
+            gfx->setCursor(65, 120);
             try
             {
                 LoveTextData loveData = network.getLoveText();
-                displayDecodedFormattedText(segmentText(loveData.serverContent, 2));
-
-            
+                displayDecodedFormattedText(segmentText(loveData.serverContent, 4));
             }
             catch (...)
             {
@@ -1055,6 +1083,8 @@ namespace DisplayHandling
         void makeTransition(Screens screenName)
         {
             // Transition backlight to 0
+            drawSpecChar.color = WHITE;
+            gfx->setTextColor(WHITE);
             for (int i = 100; i > 0;)
             {
                 setBackgroundLed(--i);
