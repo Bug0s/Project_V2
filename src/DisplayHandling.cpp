@@ -865,7 +865,7 @@ namespace DisplayHandling
             }
             if (messageCount == 0)
             {
-                drawJpeg("/backgrounds/mailOff.jpg", messageButton.x1, messageButton.y1);
+                drawJpeg("/buttonIcons/mailOff.jpg", messageButton.x1, messageButton.y1);
             }
             else if (messageCount == 1)
             {
