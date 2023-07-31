@@ -958,25 +958,27 @@ namespace DisplayHandling
             DisplayHandler dp = DisplayHandler();
             dp.drawMessageScreen();
         }
+        //TODO: Should display background image!
+        //- on the left side, there should be the image in a placeholder Box.
+        //- on right there should be the messageText in a placeholder Box.
         void drawMessageScreen()
         {
             createHeadline();
 
             // gfx->fillRect(50, 40, 380, 100, BLUE);
-            Box homeButton = Box(380, 220, 100, 100, YELLOW, gfx);
-            homeButton.drawBox();
-            drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
+            Box navigationButton = Box(380, 220, 100, 100, YELLOW, gfx);
+            navigationButton.drawBox();
+            bool isHomeButtonDisplayed = --messageCount == 0;
 
-            Box nextButton = Box(380, 120, 100, 100, YELLOW, gfx);
-            if (--messageCount > 0)
+            if (isHomeButtonDisplayed)
             {
-                nextButton.drawBox();
-                drawJpeg("/buttonIcons/arrowOn.jpg", nextButton.x1, nextButton.y1);
+                navigationButton.drawBox();
+                drawJpeg("/buttonIcons/homeButton.jpg", navigationButton.x1, navigationButton.y1);
             }
             else
             {
-                nextButton.drawBox();
-                drawJpeg("/buttonIcons/arrowOff.jpg", nextButton.x1, nextButton.y1);
+                navigationButton.drawBox();
+                drawJpeg("/buttonIcons/arrowOn.jpg", navigationButton.x1, navigationButton.y1);
             }
             gfx->drawFastHLine(380, 220, 100, BLACK);
             drawJpeg(localImage, 40, 40);
@@ -994,15 +996,13 @@ namespace DisplayHandling
             while (true)
             {
                 watchAlways();
-
-                if (senseObject(homeButton))
+                if (senseObject(navigationButton))
                 {
-                    makeTransition(Screens(Home));
-                    break;
-                }
-                if (senseObject(nextButton) && messageCount > 0)
-                {
-                    makeTransition(Screens(Downloading));
+                    if (isHomeButtonDisplayed) {
+                        makeTransition(Screens(Home));
+                    } else {
+                        makeTransition(Screens(Downloading));
+                    }
                     break;
                 }
             }
