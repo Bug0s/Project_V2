@@ -598,6 +598,10 @@ namespace DisplayHandling
                     gfx->drawRect(x1 - i, y1 - i, width + i + i, height + i + i, color);
                 }
             }
+
+            void fillBox(uint16_t color) {
+                gfx->fillRect(x1, y1, width, height, color);
+            }
         };
 
     public:
@@ -963,13 +967,24 @@ namespace DisplayHandling
         //- on right there should be the messageText in a placeholder Box.
         void drawMessageScreen()
         {
+            drawJpeg(backgroundImagePath, 0, 0);
+
             createHeadline();
 
-            // gfx->fillRect(50, 40, 380, 100, BLUE);
+            Box imageHolder = Box(20, 35, 270, 230, BLACK, gfx);
+
+            //The box of the next/home button at the bottom right corner.
             Box navigationButton = Box(380, 220, 100, 100, YELLOW, gfx);
-            navigationButton.drawBox();
+            
             bool isHomeButtonDisplayed = --messageCount == 0;
 
+            imageHolder.fillBox(BLACK);
+            imageHolder.drawBox();
+
+            navigationButton.drawBox();
+            navigationButton.drawBorder(2, BLACK);
+
+            
             if (isHomeButtonDisplayed)
             {
                 navigationButton.drawBox();
@@ -980,10 +995,10 @@ namespace DisplayHandling
                 navigationButton.drawBox();
                 drawJpeg("/buttonIcons/arrowOn.jpg", navigationButton.x1, navigationButton.y1);
             }
-            gfx->drawFastHLine(380, 220, 100, BLACK);
-            drawJpeg(localImage, 40, 40);
 
-            displayDecodedFormattedText(queueItem.message);
+            drawJpeg(localImage, 21, 36);
+
+            //displayDecodedFormattedText(queueItem.message);
 
             try
             {
@@ -1042,12 +1057,15 @@ namespace DisplayHandling
             Box homeButton = Box(380, 220, 100, 100, YELLOW, gfx);
             Box messageHolder = Box(50, 40, 380, 200, RED, gfx);
             this->drawJpeg(backgroundImagePath, 0, 0);
-            this->drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
+            
             createHeadline();
             homeButton.drawBox();
             homeButton.drawBorder(2, BLACK);
             gfx->fillRect(messageHolder.x1, messageHolder.y1, messageHolder.width, messageHolder.height, BLACK);
             messageHolder.drawBox();
+
+            //So this will be over the holder Box.
+            this->drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
 
             gfx->setCursor(150, 55);
             gfx->setTextColor(RED);

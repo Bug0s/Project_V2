@@ -14,6 +14,11 @@
 #define minimum(a, b) (((a) < (b)) ? (a) : (b))
 namespace DataHandling
 {
+    typedef struct {
+            int width;
+            int height;
+        } ImageSize;
+
     class JpegHandler
     {
     public:
@@ -95,18 +100,9 @@ namespace DataHandling
                 else if ((mcu_y + win_h) >= tft->height())
                     JpegDec.abort();
             }
+            //return ImageSize(max_x, max_y);
 
-            // calculate how long it took to draw the image
-            drawTime = millis() - drawTime; // Calculate the time it took
-
-            // print the results to the serial port
-            /* Serial.print("Total render time was    : ");
-             Serial.print(drawTime);
-             Serial.println(" ms");
-             Serial.println("=====================================");*/
         }
-
-        //Should used inside main.cpp::setup()
         
     };
 
