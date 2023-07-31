@@ -102,7 +102,6 @@ namespace Networking
                 // Close file
                 file.close();
                 if (isBackground) this->backgroundDownloaded();
-                Serial.println("Image downloaded");
             }
             else
             {
