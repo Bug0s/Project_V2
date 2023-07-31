@@ -15,9 +15,9 @@
 namespace DataHandling
 {
     typedef struct {
-            int width;
-            int height;
-        } ImageSize;
+        int32_t width;
+        int32_t height;
+    } ImageSize;
 
     class JpegHandler
     {
@@ -30,7 +30,7 @@ namespace DataHandling
             return (decoded) ? true : false;
         }
 
-        static void jpegRender(int xpos, int ypos, Arduino_GFX *tft)
+        static ImageSize jpegRender(int xpos, int ypos, Arduino_GFX *tft)
         {
 
             // retrieve infomration about the image
@@ -100,7 +100,11 @@ namespace DataHandling
                 else if ((mcu_y + win_h) >= tft->height())
                     JpegDec.abort();
             }
-            //return ImageSize(max_x, max_y);
+            ImageSize imageSize;
+            imageSize.width = JpegDec.width;
+            imageSize.height = JpegDec.height;
+
+            return imageSize;
 
         }
         

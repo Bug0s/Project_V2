@@ -783,7 +783,7 @@ namespace DisplayHandling
         }
 
         // Draws a JPG from SPIFFS
-        void drawJpeg(const char *filename, int xpos, int ypos)
+        ImageSize drawJpeg(const char *filename, int xpos, int ypos)
 
         {
             Arduino_GFX *tft = this->gfx;
@@ -793,14 +793,14 @@ namespace DisplayHandling
                 Serial.print("ERROR: File \"");
                 Serial.print(filename);
                 Serial.println("\" not found!");
-                return;
+                throw std::runtime_error("file not found (drawJpeg DH.cpp L:796)");
             }
 
             boolean decoded = JpegDec.decodeFsFile(filename); // or pass the filename (leading / distinguishes SPIFFS files)
 
             if (decoded)
             {
-                JpegHandler::jpegRender(xpos, ypos, tft);
+                return JpegHandler::jpegRender(xpos, ypos, tft);
             }
             else
             {
@@ -965,21 +965,24 @@ namespace DisplayHandling
         //TODO: Should display background image!
         //- on the left side, there should be the image in a placeholder Box.
         //- on right there should be the messageText in a placeholder Box.
+
         void drawMessageScreen()
         {
             drawJpeg(backgroundImagePath, 0, 0);
 
             createHeadline();
 
-            Box imageHolder = Box(20, 35, 270, 230, BLACK, gfx);
+            //Draw the image to know the size of the image.
+            ImageSize imageSize = drawJpeg(localImage, 20, 35);
+            //Once we know the size, we can draw a slight border to it.
+            Box imageHolder = Box(20, 35, imageSize.width, imageSize.height, BLACK, gfx);
 
             //The box of the next/home button at the bottom right corner.
             Box navigationButton = Box(380, 220, 100, 100, YELLOW, gfx);
             
             bool isHomeButtonDisplayed = --messageCount == 0;
 
-            imageHolder.fillBox(BLACK);
-            imageHolder.drawBox();
+            imageHolder.drawBorder(2, RED);
 
             navigationButton.drawBox();
             navigationButton.drawBorder(2, BLACK);
@@ -996,7 +999,7 @@ namespace DisplayHandling
                 drawJpeg("/buttonIcons/arrowOn.jpg", navigationButton.x1, navigationButton.y1);
             }
 
-            drawJpeg(localImage, 21, 36);
+            
 
             //displayDecodedFormattedText(queueItem.message);
 
