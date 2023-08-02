@@ -901,9 +901,9 @@ namespace DisplayHandling
             drawJpeg("/buttonIcons/historyButton.jpg", historyButton.x1, historyButton.y1);
 
 
-            wchar_t *testText = L"Ez egy teljesen\nmintájááraű készült tesztelés.";
+            wchar_t *testText = L"Árvíztűrő tükörfúrógép.";
             wchar_t *segmented = segmentText(testText, 6);
-            gfx->setCursor(130, 85);
+            gfx->setCursor(130, 95);
             gfx->setTextColor(BLUE);
             drawSpecChar.color = BLUE;
             this->displayComplexText(segmented);
@@ -925,7 +925,7 @@ namespace DisplayHandling
                 if (senseObject(historyButton))
                 {
                     // makeTransition(Screens(History));
-                    break;
+                    //break;
                 }
             };
         }
@@ -968,14 +968,18 @@ namespace DisplayHandling
 
         void drawMessageScreen()
         {
+            //TODO: if landscape then put the text at the bottom.
+            //if not then put the text in left!
             drawJpeg(backgroundImagePath, 0, 0);
 
             createHeadline();
 
             //Draw the image to know the size of the image.
-            ImageSize imageSize = drawJpeg(localImage, 20, 35);
+            ImageSize imageSize = drawJpeg(localImage, 15, 35);
             //Once we know the size, we can draw a slight border to it.
-            Box imageHolder = Box(20, 35, imageSize.width, imageSize.height, BLACK, gfx);
+            Box imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
+            Box textPlaceHolder = Box(300, 35, 160, 200, BLACK, gfx);
+
 
             //The box of the next/home button at the bottom right corner.
             Box navigationButton = Box(380, 220, 100, 100, YELLOW, gfx);
@@ -983,6 +987,12 @@ namespace DisplayHandling
             bool isHomeButtonDisplayed = --messageCount == 0;
 
             imageHolder.drawBorder(2, RED);
+
+            textPlaceHolder.fillBox(BLACK);
+            textPlaceHolder.drawBorder(2, RED);
+
+            gfx->setCursor(310, 40);
+            displayDecodedFormattedText(segmentText(queueItem.message, 10));
 
             navigationButton.drawBox();
             navigationButton.drawBorder(2, BLACK);

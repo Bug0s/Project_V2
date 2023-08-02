@@ -19,13 +19,15 @@ namespace Networking
         String message;
         String image;
         String time;
+        bool isLandscape;
 
-        QueueItem(int id, String message, String image, String time)
+        QueueItem(int id, String message, String image, String time, bool isLandscape)
         {
             this->id = id;
             this->message = message;
             this->image = image;
             this->time = time;
+            this->isLandscape = isLandscape;
         }
         QueueItem()
         {
@@ -154,8 +156,9 @@ namespace Networking
                     String message = obj["message"];
                     String image = obj["image"];
                     String time = obj["time"];
+                    bool isLandscape = obj["isLandscape"];
                     http.end();
-                    return QueueItem(id, message, image, time);
+                    return QueueItem(id, message, image, time, isLandscape);
                 }
                 else
                 {
