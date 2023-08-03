@@ -977,9 +977,14 @@ namespace DisplayHandling
             //Draw the image to know the size of the image.
             ImageSize imageSize = drawJpeg(localImage, 15, 35);
             //Once we know the size, we can draw a slight border to it.
+            //This is the landscape option!!!!
             Box imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
-            Box textPlaceHolder = Box(300, 35, 160, 200, BLACK, gfx);
+            Box textPlaceHolder = Box(15, 250, 350, 58, BLACK, gfx);
 
+            if (!queueItem.isLandscape) {
+            //imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
+            //textPlaceHolder = Box(300, 35, 160, 200, BLACK, gfx);
+            }
 
             //The box of the next/home button at the bottom right corner.
             Box navigationButton = Box(380, 220, 100, 100, YELLOW, gfx);
@@ -991,7 +996,7 @@ namespace DisplayHandling
             textPlaceHolder.fillBox(BLACK);
             textPlaceHolder.drawBorder(2, RED);
 
-            gfx->setCursor(310, 40);
+            gfx->setCursor(17, 253);
             displayDecodedFormattedText(segmentText(queueItem.message, 10));
 
             navigationButton.drawBox();
