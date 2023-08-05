@@ -749,11 +749,8 @@ namespace DisplayHandling
             setBackgroundLed(100);
             ts.begin();
             network.updateBackground();
-            // xTaskCreatePinnedToCore(&drawHomeScreen, "HomeScreen", 1024, NULL, 2, NULL, 0);
-            // It should be HOMESCREEN to drawn!!! / testCase
-            drawHomeScreen();
-            // xTaskCreate(DisplayHandler::taskDrawHomeScreen, "Drawing home screen, and sensing touch", 1200000, NULL, 1, TaskHandlers::drawHomeScreen);
-            // vTaskStartScheduler();
+            //The wifi connection screen will connect to the homeScreen
+            drawWifiConnectionScreen();
         }
 
         // Sets the background led strongness by percentage
@@ -846,6 +843,17 @@ namespace DisplayHandling
             }
         }
 
+
+        void drawWifiConnectionScreen() {
+            Box textBox = Box(100, 80, 220, 50, RED, gfx);
+            drawJpeg(backgroundImagePath, 0,0);
+            //createHeadline();
+            textBox.fillBox(BLACK);
+            textBox.drawBorder(2, RED);
+            network.connectToWiFi("Macko", "Maczkonokia01");
+            drawHomeScreen();
+        }
+
         // @brief Needs to stop via taskHandler 'drawHomeScreen'!
         static void taskDrawHomeScreen(void *params)
         {
@@ -934,11 +942,16 @@ namespace DisplayHandling
         {
             createHeadline();
             setBackgroundLed(100);
-            gfx->drawRect(100, 60, 300, 80, RED);
-
+            
+            Box downloadTextPlaceHolder = Box(100, 60, 270, 60, RED, gfx);
             gfx->setCursor(120, 75);
             gfx->setTextColor(WHITE);
             gfx->setTextSize(2);
+            drawJpeg(backgroundImagePath, 0, 0);
+
+            downloadTextPlaceHolder.fillBox(BLACK);
+            downloadTextPlaceHolder.drawBorder(2, RED);
+
             this->displayComplexText(L"Üzenet letöltése...");
             delay(50);
             try
@@ -982,8 +995,8 @@ namespace DisplayHandling
             Box textPlaceHolder = Box(15, 250, 350, 58, BLACK, gfx);
 
             if (!queueItem.isLandscape) {
-            //imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
-            //textPlaceHolder = Box(300, 35, 160, 200, BLACK, gfx);
+            imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
+            textPlaceHolder = Box(270, 35, 190, 200, BLACK, gfx);
             }
 
             //The box of the next/home button at the bottom right corner.
@@ -996,8 +1009,8 @@ namespace DisplayHandling
             textPlaceHolder.fillBox(BLACK);
             textPlaceHolder.drawBorder(2, RED);
 
-            gfx->setCursor(17, 253);
-            displayDecodedFormattedText(segmentText(queueItem.message, 10));
+            gfx->setCursor(textPlaceHolder.x1 + 2, textPlaceHolder.y1 + 2);
+            displayDecodedFormattedText(segmentText(queueItem.message, queueItem.isLandscape ? 2 : 10));
 
             navigationButton.drawBox();
             navigationButton.drawBorder(2, BLACK);
