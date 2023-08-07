@@ -24,6 +24,7 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
+
   if (!SPIFFS.begin())
   {
     Serial.println("SPIFFS initialisation failed!");
@@ -31,7 +32,6 @@ void setup()
       yield(); // Stay here twiddling thumbs waiting
   }
   LedDriverClass().ledSetup();
-  
   displayHandler.initTFT();
 
   // network.donwloadImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg");
