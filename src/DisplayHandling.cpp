@@ -255,6 +255,11 @@ namespace DisplayHandling
             this->blockMessages = false;
         }
 
+        void changeTextColor(uint16_t color) {
+            gfx->setTextColor(color);
+            drawSpecChar.color = color;
+        }
+
         wchar_t *segmentText(wchar_t *text, int lineStart)
         {
             int textLength = wcslen(text);
@@ -564,6 +569,26 @@ namespace DisplayHandling
             }
         }
 
+        wchar_t* statusBarText(int queueCount) {
+            switch (queueCount)
+            {
+            case 0:
+                return L"Nincs új üzenet";
+
+            case 1:
+                return L"1 új üzenet vár rád";
+            
+            case 2:
+                return L"2 új üzeneted van";
+
+            case 3:
+                return L"3 új üzenet vár rád";
+
+            default:
+                return L"Sok új üzeneted van";
+            }   
+        }
+
         struct Box
         {
         private:
@@ -748,7 +773,6 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             ts.begin();
-            network.updateBackground();
             //The wifi connection screen will connect to the homeScreen
             drawWifiConnectionScreen();
         }
@@ -822,36 +846,50 @@ namespace DisplayHandling
 
             gfx->fillRect(0, 0, 480, 20, WHITE);
 
-            drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1); // w: 33
+            const int batteryIcon = 33;
+            const int wifiIcon = 24;
+            const int serverIcon = 20;
+
+            const int spaceBetweenIcons = 20;
+
+            const int batteryIconX = 480 - spaceBetweenIcons - batteryIcon;
+            const int wifiIconX = batteryIconX - wifiIcon - spaceBetweenIcons;
+            const int serverIconX = wifiIconX - serverIcon - spaceBetweenIcons;
+            
+
+            drawJpeg("/icons/batteryCharging.jpg", batteryIconX, 1); // w: 33
 
             if (connectionStatus.networkCorrect)
             {
-                drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1); // w: 24
+                drawJpeg("/icons/WiFiOn.jpg", wifiIconX, 1); // w: 24
             }
             else
             {
-                drawJpeg("/icons/WiFiOff.jpg", 440 - 33 - 15, 1); // w: 24
+                drawJpeg("/icons/WiFiOff.jpg", wifiIconX, 1); // w: 24
             }
 
             if (connectionStatus.serverCorrect)
             {
-                drawJpeg("/icons/connectedS.jpg", 480 - 33 - 15 - 24 - 15 - 30, 0);
+                drawJpeg("/icons/connectedS.jpg", serverIconX, 0);
             }
             else
             {
-                drawJpeg("/icons/notConnectedS.jpg", 480 - 33 - 15 - 24 - 15 - 30, 0);
+                drawJpeg("/icons/notConnectedS.jpg", serverIconX, 0);
             }
         }
 
 
         void drawWifiConnectionScreen() {
-            Box textBox = Box(100, 80, 220, 50, RED, gfx);
+            Box textBox = Box(130, 100, 220, 70, RED, gfx);
             drawJpeg(backgroundImagePath, 0,0);
             //createHeadline();
             textBox.fillBox(BLACK);
             textBox.drawBorder(2, RED);
+            gfx->setCursor(textBox.x1 + 12, textBox.y1 + 12);
+            displayComplexText(L"Csatlakozás...");
             network.connectToWiFi("Macko", "Maczkonokia01");
-            drawHomeScreen();
+            network.updateBackground();
+            makeTransition(Home);
         }
 
         // @brief Needs to stop via taskHandler 'drawHomeScreen'!
@@ -912,9 +950,11 @@ namespace DisplayHandling
             wchar_t *testText = L"Árvíztűrő tükörfúrógép.";
             wchar_t *segmented = segmentText(testText, 6);
             gfx->setCursor(130, 95);
-            gfx->setTextColor(BLUE);
-            drawSpecChar.color = BLUE;
-            this->displayComplexText(segmented);
+
+            gfx->setCursor(2, 3);
+            changeTextColor(BLACK);
+            displayComplexText(statusBarText(messageCount));
+            //this->displayComplexText(segmented);
 
             while (true)
             {
@@ -996,7 +1036,7 @@ namespace DisplayHandling
 
             if (!queueItem.isLandscape) {
             imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
-            textPlaceHolder = Box(270, 35, 190, 200, BLACK, gfx);
+            textPlaceHolder = Box(260, 35, 200, 200, BLACK, gfx);
             }
 
             //The box of the next/home button at the bottom right corner.
@@ -1010,7 +1050,7 @@ namespace DisplayHandling
             textPlaceHolder.drawBorder(2, RED);
 
             gfx->setCursor(textPlaceHolder.x1 + 2, textPlaceHolder.y1 + 2);
-            displayDecodedFormattedText(segmentText(queueItem.message, queueItem.isLandscape ? 2 : 10));
+            displayDecodedFormattedText(segmentText(queueItem.message, queueItem.isLandscape ? 2 : 22));
 
             navigationButton.drawBox();
             navigationButton.drawBorder(2, BLACK);
@@ -1112,7 +1152,7 @@ namespace DisplayHandling
             try
             {
                 LoveTextData loveData = network.getLoveText();
-                displayDecodedFormattedText(segmentText(loveData.serverContent, 4));
+                displayDecodedFormattedText(segmentText(loveData.serverContent, 5));
             }
             catch (...)
             {
