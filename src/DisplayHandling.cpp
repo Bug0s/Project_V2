@@ -10,7 +10,6 @@
 #include "freertos/task.h"
 #include "TaskHandler.h"
 #include "LedDriver.cpp"
-#include "vector"
 
 using namespace DataHandling;
 using namespace Networking;
@@ -137,7 +136,7 @@ namespace DisplayHandling
             gfx->drawPixel(cursorX() + 6, cursorY() - 0, color);
             gfx->print("u");
         }
-        
+
         void draw_uDoubleLong()
         {
             gfx->drawLine(cursorX() + 2, cursorY() - 0, cursorX() + 2 + 2, cursorY() - 0 - 2, color);
@@ -245,7 +244,8 @@ namespace DisplayHandling
         const char *localImage = "/image.jpg";
         // If true the user should not view any new messages!
         bool blockMessages = false;
-        char* backgroundImagePath = "/background/heartBackground.jpg";
+        char *backgroundImagePath = "/background/heartBackground.jpg";
+        bool wasErrorOnIdle = false;
         void badConnection()
         {
             this->blockMessages = true;
@@ -253,6 +253,12 @@ namespace DisplayHandling
         void goodConnection()
         {
             this->blockMessages = false;
+        }
+
+        void changeTextColor(uint16_t color)
+        {
+            gfx->setTextColor(color);
+            drawSpecChar.color = color;
         }
 
         wchar_t *segmentText(wchar_t *text, int lineStart)
@@ -564,11 +570,33 @@ namespace DisplayHandling
             }
         }
 
+        wchar_t *statusBarText(int queueCount)
+        {
+            switch (queueCount)
+            {
+            case 0:
+                return L"Nincs új üzenet";
+
+            case 1:
+                return L"1 új üzenet vár rád";
+
+            case 2:
+                return L"2 új üzeneted van";
+
+            case 3:
+                return L"3 új üzenet vár rád";
+
+            default:
+                return L"Sok új üzeneted van";
+            }
+        }
+
         struct Box
         {
         private:
             uint16_t color;
             Arduino_GFX *gfx;
+
         public:
             int width;
             int height;
@@ -593,13 +621,16 @@ namespace DisplayHandling
                 gfx->drawRect(x1, y1, width, height, color);
             }
 
-            void drawBorder(int16_t lineWidth, uint16_t color) {
-                for (int i = 1; i < lineWidth + 1; i++) {
+            void drawBorder(int16_t lineWidth, uint16_t color)
+            {
+                for (int i = 1; i < lineWidth + 1; i++)
+                {
                     gfx->drawRect(x1 - i, y1 - i, width + i + i, height + i + i, color);
                 }
             }
 
-            void fillBox(uint16_t color) {
+            void fillBox(uint16_t color)
+            {
                 gfx->fillRect(x1, y1, width, height, color);
             }
         };
@@ -707,9 +738,16 @@ namespace DisplayHandling
         void onChestClosed()
         {
             this->setBackgroundLed(0);
-            network.updateBackground();
-            // The program execution continues when found new messages!
-            lookForNewMessages();
+            try
+            {
+                network.updateBackground();
+                // The program execution continues when found new messages!
+                lookForNewMessages();
+            }
+            catch (...)
+            {
+                wasErrorOnIdle = true;
+            }
             this->makeTransition(Home);
             this->setBackgroundLed(100);
         }
@@ -748,8 +786,7 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             ts.begin();
-            network.updateBackground();
-            //The wifi connection screen will connect to the homeScreen
+            // The wifi connection screen will connect to the homeScreen
             drawWifiConnectionScreen();
         }
 
@@ -773,7 +810,7 @@ namespace DisplayHandling
             }
             catch (const std::exception &err)
             {
-                onErrorThrown(L"Nem sikerült letölteni a képet.\nPróbáld újra!");
+                onErrorThrown(L"Nem sikerült letölteni\na képet. Próbáld újra!");
                 return;
             }
             this->drawJpeg("/image.jpg", xpos, ypos);
@@ -822,36 +859,49 @@ namespace DisplayHandling
 
             gfx->fillRect(0, 0, 480, 20, WHITE);
 
-            drawJpeg("/icons/batteryCharging.jpg", 480 - 40, 1); // w: 33
+            const int batteryIcon = 33;
+            const int wifiIcon = 24;
+            const int serverIcon = 20;
+
+            const int spaceBetweenIcons = 20;
+
+            const int batteryIconX = 480 - spaceBetweenIcons - batteryIcon;
+            const int wifiIconX = batteryIconX - wifiIcon - spaceBetweenIcons;
+            const int serverIconX = wifiIconX - serverIcon - spaceBetweenIcons;
+
+            drawJpeg("/icons/batteryCharging.jpg", batteryIconX, 1); // w: 33
 
             if (connectionStatus.networkCorrect)
             {
-                drawJpeg("/icons/WiFiOn.jpg", 440 - 33 - 15, 1); // w: 24
+                drawJpeg("/icons/WiFiOn.jpg", wifiIconX, 1); // w: 24
             }
             else
             {
-                drawJpeg("/icons/WiFiOff.jpg", 440 - 33 - 15, 1); // w: 24
+                drawJpeg("/icons/WiFiOff.jpg", wifiIconX, 1); // w: 24
             }
 
             if (connectionStatus.serverCorrect)
             {
-                drawJpeg("/icons/connectedS.jpg", 480 - 33 - 15 - 24 - 15 - 30, 0);
+                drawJpeg("/icons/connectedS.jpg", serverIconX, 0);
             }
             else
             {
-                drawJpeg("/icons/notConnectedS.jpg", 480 - 33 - 15 - 24 - 15 - 30, 0);
+                drawJpeg("/icons/notConnectedS.jpg", serverIconX, 0);
             }
         }
 
-
-        void drawWifiConnectionScreen() {
-            Box textBox = Box(100, 80, 220, 50, RED, gfx);
-            drawJpeg(backgroundImagePath, 0,0);
-            //createHeadline();
+        void drawWifiConnectionScreen()
+        {
+            Box textBox = Box(130, 100, 220, 70, RED, gfx);
+            drawJpeg(backgroundImagePath, 0, 0);
+            // createHeadline();
             textBox.fillBox(BLACK);
             textBox.drawBorder(2, RED);
+            gfx->setCursor(textBox.x1 + 12, textBox.y1 + 12);
+            displayComplexText(L"Csatlakozás...");
             network.connectToWiFi("Macko", "Maczkonokia01");
-            drawHomeScreen();
+            network.updateBackground();
+            makeTransition(Home);
         }
 
         // @brief Needs to stop via taskHandler 'drawHomeScreen'!
@@ -875,6 +925,13 @@ namespace DisplayHandling
                 buttons[i].drawBox();
                 buttons[i].drawBorder(2, BLACK);
             }
+
+            if (wasErrorOnIdle)
+            {
+                wasErrorOnIdle = false;
+                onErrorThrown(L"Hiba a frissítés\nközben.");
+            }
+            
             messageCount = -1;
             try
             {
@@ -882,7 +939,7 @@ namespace DisplayHandling
             }
             catch (...)
             {
-                onErrorThrown(L"Problem on getting\nthe queue Status.");
+                onErrorThrown(L"Hiba az üznetek\nellenörzése közben.");
             }
             this->blockMessages = messageCount == 0;
             if (messageCount == 0)
@@ -908,13 +965,14 @@ namespace DisplayHandling
             drawJpeg("/buttonIcons/loveButton.jpg", loveButton.x1, loveButton.y1);
             drawJpeg("/buttonIcons/historyButton.jpg", historyButton.x1, historyButton.y1);
 
-
             wchar_t *testText = L"Árvíztűrő tükörfúrógép.";
             wchar_t *segmented = segmentText(testText, 6);
             gfx->setCursor(130, 95);
-            gfx->setTextColor(BLUE);
-            drawSpecChar.color = BLUE;
-            this->displayComplexText(segmented);
+
+            gfx->setCursor(2, 3);
+            changeTextColor(BLACK);
+            displayComplexText(statusBarText(messageCount));
+            // this->displayComplexText(segmented);
 
             while (true)
             {
@@ -933,7 +991,7 @@ namespace DisplayHandling
                 if (senseObject(historyButton))
                 {
                     // makeTransition(Screens(History));
-                    //break;
+                    // break;
                 }
             };
         }
@@ -942,7 +1000,7 @@ namespace DisplayHandling
         {
             createHeadline();
             setBackgroundLed(100);
-            
+
             Box downloadTextPlaceHolder = Box(100, 60, 270, 60, RED, gfx);
             gfx->setCursor(120, 75);
             gfx->setTextColor(WHITE);
@@ -963,7 +1021,7 @@ namespace DisplayHandling
             catch (std::exception &err)
             {
                 Serial.println(err.what());
-                onErrorThrown(L"Hiba a kép letöltése közben.\nPróbáld újra Baby!");
+                onErrorThrown(L"Hiba a kép letöltése\nközben. Próbáld újra,\nBaby!");
             }
             makeTransition(Screens(Message));
         }
@@ -975,33 +1033,34 @@ namespace DisplayHandling
             DisplayHandler dp = DisplayHandler();
             dp.drawMessageScreen();
         }
-        //TODO: Should display background image!
+        // TODO: Should display background image!
         //- on the left side, there should be the image in a placeholder Box.
         //- on right there should be the messageText in a placeholder Box.
 
         void drawMessageScreen()
         {
-            //TODO: if landscape then put the text at the bottom.
-            //if not then put the text in left!
+            // TODO: if landscape then put the text at the bottom.
+            // if not then put the text in left!
             drawJpeg(backgroundImagePath, 0, 0);
 
             createHeadline();
 
-            //Draw the image to know the size of the image.
+            // Draw the image to know the size of the image.
             ImageSize imageSize = drawJpeg(localImage, 15, 35);
-            //Once we know the size, we can draw a slight border to it.
-            //This is the landscape option!!!!
+            // Once we know the size, we can draw a slight border to it.
+            // This is the landscape option!!!!
             Box imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
             Box textPlaceHolder = Box(15, 250, 350, 58, BLACK, gfx);
 
-            if (!queueItem.isLandscape) {
-            imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
-            textPlaceHolder = Box(270, 35, 190, 200, BLACK, gfx);
+            if (!queueItem.isLandscape)
+            {
+                imageHolder = Box(15, 35, imageSize.width, imageSize.height, BLACK, gfx);
+                textPlaceHolder = Box(260, 35, 200, 200, BLACK, gfx);
             }
 
-            //The box of the next/home button at the bottom right corner.
+            // The box of the next/home button at the bottom right corner.
             Box navigationButton = Box(380, 220, 100, 100, YELLOW, gfx);
-            
+
             bool isHomeButtonDisplayed = --messageCount == 0;
 
             imageHolder.drawBorder(2, RED);
@@ -1010,12 +1069,11 @@ namespace DisplayHandling
             textPlaceHolder.drawBorder(2, RED);
 
             gfx->setCursor(textPlaceHolder.x1 + 2, textPlaceHolder.y1 + 2);
-            displayDecodedFormattedText(segmentText(queueItem.message, queueItem.isLandscape ? 2 : 10));
+            displayDecodedFormattedText(segmentText(queueItem.message, queueItem.isLandscape ? 2 : 22));
 
             navigationButton.drawBox();
             navigationButton.drawBorder(2, BLACK);
 
-            
             if (isHomeButtonDisplayed)
             {
                 navigationButton.drawBox();
@@ -1027,9 +1085,7 @@ namespace DisplayHandling
                 drawJpeg("/buttonIcons/arrowOn.jpg", navigationButton.x1, navigationButton.y1);
             }
 
-            
-
-            //displayDecodedFormattedText(queueItem.message);
+            // displayDecodedFormattedText(queueItem.message);
 
             try
             {
@@ -1037,16 +1093,19 @@ namespace DisplayHandling
             }
             catch (...)
             {
-                onErrorThrown(L"Problem on contacting\nthe server. (L717)");
+                onErrorThrown(L"Hiba a kép megnézettre\njelentése közben.");
             }
             while (true)
             {
                 watchAlways();
                 if (senseObject(navigationButton))
                 {
-                    if (isHomeButtonDisplayed) {
+                    if (isHomeButtonDisplayed)
+                    {
                         makeTransition(Screens(Home));
-                    } else {
+                    }
+                    else
+                    {
                         makeTransition(Screens(Downloading));
                     }
                     break;
@@ -1088,14 +1147,14 @@ namespace DisplayHandling
             Box homeButton = Box(380, 220, 100, 100, YELLOW, gfx);
             Box messageHolder = Box(50, 40, 380, 200, RED, gfx);
             this->drawJpeg(backgroundImagePath, 0, 0);
-            
+
             createHeadline();
             homeButton.drawBox();
             homeButton.drawBorder(2, BLACK);
             gfx->fillRect(messageHolder.x1, messageHolder.y1, messageHolder.width, messageHolder.height, BLACK);
             messageHolder.drawBox();
 
-            //So this will be over the holder Box.
+            // So this will be over the holder Box.
             this->drawJpeg("/buttonIcons/homeButton.jpg", homeButton.x1, homeButton.y1);
 
             gfx->setCursor(150, 55);
@@ -1112,11 +1171,11 @@ namespace DisplayHandling
             try
             {
                 LoveTextData loveData = network.getLoveText();
-                displayDecodedFormattedText(segmentText(loveData.serverContent, 4));
+                displayDecodedFormattedText(segmentText(loveData.serverContent, 5));
             }
             catch (...)
             {
-                onErrorThrown(L"Error on getting\nthe love data.");
+                onErrorThrown(L"Hiba a napi\nüzenet letöltésével.");
             }
             while (true)
             {
@@ -1182,6 +1241,39 @@ namespace DisplayHandling
                 delay(1);
             }
             setBackgroundLed(100);
+        }
+        wchar_t *formText(wchar_t *text, int maxCount)
+        {
+            if (!text || maxCount <= 0)
+            {
+                return nullptr;
+            }
+
+            int inputLength = wcslen(text);
+            wchar_t *outputText = new wchar_t[inputLength * 2 + 1]; // A rough estimate of the output length
+
+            int currentCount = 0;
+            int outputIndex = 0;
+            for (int i = 0; i < inputLength; ++i)
+            {
+                if (currentCount + wcslen(&text[i]) <= maxCount)
+                {
+                    wcscpy(&outputText[outputIndex], &text[i]);
+                    currentCount += wcslen(&text[i]);
+                    outputIndex += wcslen(&text[i]);
+                    i += wcslen(&text[i]) - 1;
+                }
+                else
+                {
+                    outputText[outputIndex] = L'\n';
+                    ++outputIndex;
+                    currentCount = 0;
+                    --i; // Revisit the current word in the next iteration
+                }
+            }
+
+            outputText[outputIndex] = L'\0';
+            return outputText;
         }
         void onErrorThrown(wchar_t *errorMessage)
         {
