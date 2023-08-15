@@ -786,7 +786,7 @@ namespace DisplayHandling
             pinMode(22, OUTPUT);
             setBackgroundLed(100);
             ts.begin();
-            // The wifi connection screen will connect to the homeScreen
+            //The wifi connection screen will connect to the homeScreen
             drawWifiConnectionScreen();
         }
 
