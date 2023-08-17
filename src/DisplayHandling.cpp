@@ -242,6 +242,7 @@ namespace DisplayHandling
         Network network = Network();
         QueueItem queueItem;
         const char *localImage = "/image.jpg";
+
         // If true the user should not view any new messages!
         bool blockMessages = false;
         char *backgroundImagePath = "/background/heartBackground.jpg";
@@ -899,8 +900,8 @@ namespace DisplayHandling
             textBox.drawBorder(2, RED);
             gfx->setCursor(textBox.x1 + 12, textBox.y1 + 12);
             displayComplexText(L"Csatlakozás...");
-            //network.connectToWiFi("Telekom - T-34/85", "c4m7jfexucsv");
-            network.connectToWiFi("Macko", "Maczkonokia01");
+            network.connectToWiFi("Telekom - T-34/85", "c4m7jfexucsv");
+            //network.connectToWiFi("Macko", "Maczkonokia01");
             network.updateBackground();
             makeTransition(Home);
         }
@@ -1034,14 +1035,9 @@ namespace DisplayHandling
             DisplayHandler dp = DisplayHandler();
             dp.drawMessageScreen();
         }
-        // TODO: Should display background image!
-        //- on the left side, there should be the image in a placeholder Box.
-        //- on right there should be the messageText in a placeholder Box.
 
         void drawMessageScreen()
         {
-            // TODO: if landscape then put the text at the bottom.
-            // if not then put the text in left!
             drawJpeg(backgroundImagePath, 0, 0);
 
             createHeadline();
@@ -1085,9 +1081,6 @@ namespace DisplayHandling
                 navigationButton.drawBox();
                 drawJpeg("/buttonIcons/arrowOn.jpg", navigationButton.x1, navigationButton.y1);
             }
-
-            // displayDecodedFormattedText(queueItem.message);
-
             try
             {
                 network.lastPostDisplayed();

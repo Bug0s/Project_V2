@@ -1,6 +1,4 @@
 #pragma once
-// #ifndef NETWORKING_CPP
-// #define NETWORKING_CPP
 #include "Arduino.h"
 #include "WiFi.h"
 #include "SPI.h"
@@ -249,4 +247,3 @@ namespace Networking
         }
     };
 }
-// #endif

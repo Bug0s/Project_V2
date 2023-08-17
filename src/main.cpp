@@ -9,35 +9,37 @@
 #include "TaskHandler.h"
 #define FS_NO_GLOBALS
 
-// using namespace Networking;
 using namespace DisplayHandling;
 using namespace DataHandling;
 using namespace Networking;
 using namespace TaskHandler;
 
-// Network network = Network();
 Network network = Network();
 DisplayHandler displayHandler = DisplayHandler();
 JpegHandler jpegHandler = JpegHandler();
 
+/*
+  TODO in future versions:
+    -try to connect to multiple wifis.
+    -dont check for wifi all the time, its enough to check it every 5-10 seconds
+    -status bar server check unreliable
+    -history function
+    -react to messages
+*/
 void setup()
 {
-  // put your setup code here, to run once:
   Serial.begin(9600);
 
   if (!SPIFFS.begin())
   {
     Serial.println("SPIFFS initialisation failed!");
     while (1)
-      yield(); // Stay here twiddling thumbs waiting
+      yield();
   }
   LedDriverClass().ledSetup();
   displayHandler.initTFT();
-
-  // network.donwloadImage("https://onlinejpgtools.com/images/examples-onlinejpgtools/coffee-resized.jpg");
 }
 
 void loop()
 {
-  // testComment
 }
