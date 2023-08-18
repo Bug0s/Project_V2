@@ -722,7 +722,7 @@ namespace DisplayHandling
 
                         // Led villogtatás
                         ld.ledStart(sectionNum++);
-                        if (sectionNum == 31)
+                        if (sectionNum == 8)
                         {
                             sectionNum = 1;
                         }
@@ -900,8 +900,7 @@ namespace DisplayHandling
             textBox.drawBorder(2, RED);
             gfx->setCursor(textBox.x1 + 12, textBox.y1 + 12);
             displayComplexText(L"Csatlakozás...");
-            network.connectToWiFi("Telekom - T-34/85", "c4m7jfexucsv");
-            //network.connectToWiFi("Macko", "Maczkonokia01");
+            network.connectToWiFi("Macko", "Maczkonokia01");
             network.updateBackground();
             makeTransition(Home);
         }
