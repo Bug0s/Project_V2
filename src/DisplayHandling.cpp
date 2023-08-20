@@ -900,7 +900,9 @@ namespace DisplayHandling
             textBox.drawBorder(2, RED);
             gfx->setCursor(textBox.x1 + 12, textBox.y1 + 12);
             displayComplexText(L"Csatlakozás...");
-            network.connectToWiFi("Macko", "Maczkonokia01");
+            //FOR DEV:
+            //network.connectToWiFi("Macko", "Maczkonokia01");
+            network.connectToWiFi("Telekom-TUFEfH", "huh6fpacmcxb");
             network.updateBackground();
             makeTransition(Home);
         }
